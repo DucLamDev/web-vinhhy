@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --ocean: #0f8ea4;
+  --coral: #ff7a1a;
+  --ink: #15304a;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(47, 183, 196, 0.12), transparent 20%),
+    linear-gradient(180deg, #f4fbfd 0%, #fffdf8 45%, #ffffff 100%);
+  color: #15304a;
+  font-family: var(--font-body), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-title), serif;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+::selection {
+  background: rgba(15, 142, 164, 0.18);
+}
+
+/* ─── Glass morphism ─── */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.glass-dark {
+  background: rgba(21, 48, 74, 0.55);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ─── Horizontal scroll ─── */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-x > * {
+  scroll-snap-align: start;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Sticky Tab Bar ─── */
+.tab-bar {
+  position: sticky;
+  top: 4.5rem;
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.tab-bar-link {
+  position: relative;
+  padding: 0.875rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.tab-bar-link:hover {
+  color: var(--ocean);
+}
+
+.tab-bar-link.active {
+  color: var(--ocean);
+}
+
+.tab-bar-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--ocean);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ─── Timeline ─── */
+.timeline-connector {
+  position: relative;
+}
+
+.timeline-connector::before {
+  content: "";
+  position: absolute;
+  left: 1.375rem;
+  top: 3.75rem;
+  bottom: -1rem;
+  width: 2px;
+  background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+}
+
+.timeline-connector:last-child::before {
+  display: none;
+}
+
+.timeline-dot {
+  position: relative;
+  z-index: 2;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── Price card glow ─── */
+.price-card-active {
+  box-shadow:
+    0 0 0 2px var(--coral),
+    0 8px 24px rgba(255, 122, 26, 0.12);
+}
+
+/* ─── Booking mobile bar ─── */
+.booking-mobile-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 0.75rem 1rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.booking-mobile-bar.visible {
+  transform: translateY(0);
+}
+
+.page-transition-enter {
+  animation: fadeInPage 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fadeInPage {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Animated counter ─── */
+.counter-value {
+  display: inline-block;
+  min-width: 1.75rem;
+  text-align: center;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.counter-value.bump {
+  animation: counterBump 0.2s ease;
+}
+
+@keyframes counterBump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* ─── Success animation ─── */
+.success-check {
+  animation: successPop 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes successPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ─── Step indicator ─── */
+.step-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.step-dot.completed {
+  background: var(--ocean);
+  color: #fff;
+}
+
+.step-dot.current {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.18);
+}
+
+.step-dot.upcoming {
+  background: #e2e8f0;
+  color: #94a3b8;
+}
+
+.step-connector {
+  height: 2px;
+  flex: 1;
+  background: #e2e8f0;
+  transition: background 0.3s;
+}
+
+.step-connector.completed {
+  background: var(--ocean);
+}
+
+/* ─── Blog prose (keep existing) ─── */
+.prose-blog p {
+  margin-top: 1rem;
+  line-height: 1.9;
+  color: #3e5872;
+}
+
+.prose-blog h2,
+.prose-blog h3,
+.prose-blog h4 {
+  margin-top: 2rem;
+  color: #15304a;
+}
+
+.prose-blog ul,
+.prose-blog ol {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  color: #3e5872;
+}
+
+/* ─── Hero gallery overlay ─── */
+.hero-gallery-overlay {
+  background: linear-gradient(
+    0deg,
+    rgba(15, 30, 50, 0.82) 0%,
+    rgba(15, 30, 50, 0.35) 40%,
+    rgba(15, 30, 50, 0.08) 70%,
+    transparent 100%
+  );
+}
+
+.gallery-grid button:focus-visible,
+.tab-bar button:focus-visible {
+  outline: 2px solid rgba(15, 142, 164, 0.38);
+  outline-offset: 2px;
+}
