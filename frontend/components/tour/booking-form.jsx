@@ -229,65 +229,82 @@ export function BookingForm({ tour, onSummaryChange }) {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5 lg:p-5 xl:p-6">
-      <div className="mb-4 flex items-start justify-between gap-3">
+      <div className="mb-4 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-slate-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ocean">Booking</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Booking</p>
           <h2 className="mt-2 text-[1.85rem] font-semibold leading-none text-ink lg:text-[2rem]">Đặt tour</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Gói chọn: <span className="font-semibold text-ink">{selectedPackage?.label || "Chọn gói"}</span>
+          </p>
         </div>
-        <span className="max-w-[188px] rounded-full bg-sky px-3.5 py-2 text-right text-[11px] font-semibold text-ocean sm:max-w-none">
-          {selectedPackage?.shortLabel || "Chọn gói"}
-        </span>
+
+        <div className="rounded-[24px] bg-white px-4 py-3 text-right shadow-sm">
+          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Tổng tạm tính</p>
+          <p className="mt-2 text-2xl font-semibold text-coral">{formatCurrency(totalPrice)}</p>
+          <p className="mt-1 text-sm text-slate-500">{totalTravelers} khách</p>
+        </div>
       </div>
 
       <StepIndicator step={step} />
 
       <div className="mt-4 rounded-[26px] bg-[#f6f4ef] p-4 lg:p-4 xl:p-5">
         {step === 1 ? (
-          <div className="space-y-4 xl:grid xl:grid-cols-[1.08fr_0.92fr] xl:gap-4 xl:space-y-0">
-            <div>
-              <p className="text-sm font-semibold text-ink">1. Chọn gói dịch vụ</p>
-              <div className="mt-3 grid gap-2.5 min-[380px]:grid-cols-2">
-                {packageOptions.map((option, index) => {
-                  const isActive = selectedPackage?.id === option.id;
-                  const lastWide = packageOptions.length % 2 === 1 && index === packageOptions.length - 1 ? "min-[380px]:col-span-2" : "";
+          <>
+            <div className="space-y-4 xl:grid xl:grid-cols-[1.08fr_0.92fr] xl:gap-4 xl:space-y-0">
+              <div>
+                <p className="text-sm font-semibold text-ink">1. Chọn gói dịch vụ</p>
+                <div className="mt-3 grid gap-2.5 min-[380px]:grid-cols-2">
+                  {packageOptions.map((option, index) => {
+                    const isActive = selectedPackage?.id === option.id;
+                    const lastWide = packageOptions.length % 2 === 1 && index === packageOptions.length - 1 ? "min-[380px]:col-span-2" : "";
 
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => handlePackageChange(option.id)}
-                      className={cn(
-                        "rounded-[20px] border bg-white px-4 py-3 text-left text-[14px] font-semibold leading-5 tracking-[-0.01em] transition min-[380px]:min-h-[78px] lg:text-[15px] xl:px-4 xl:py-3 xl:text-[14px]",
-                        lastWide,
-                        isActive
-                          ? "price-card-active border-coral bg-[#fffaf5] text-coral"
-                          : "border-slate-200 text-ink hover:border-coral/40 hover:bg-[#fffdfa]"
-                      )}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => handlePackageChange(option.id)}
+                        className={cn(
+                          "rounded-[20px] border bg-white px-3 py-3 text-left text-[14px] font-semibold leading-5 tracking-[-0.01em] transition min-[380px]:min-h-[68px] lg:text-[15px] xl:px-4 xl:py-3 xl:text-[14px]",
+                          lastWide,
+                          isActive
+                            ? "price-card-active border-coral bg-[#fffaf5] text-coral"
+                            : "border-slate-200 text-ink hover:border-coral/40 hover:bg-[#fffdfa]"
+                        )}
+                      >
+                        <div>{option.label}</div>
+                        <p className="mt-2 text-sm font-medium text-slate-500">
+                          {option.adultPrice ? `${formatCurrency(option.adultPrice)} / khách` : "Liên hệ"}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-ink">2. Chọn số lượng khách</p>
+                <div className="mt-3 space-y-2.5">
+                  {travelerOptions.map((type) => (
+                    <TravelerCounterCard
+                      key={type.key}
+                      label={type.label}
+                      hint={type.hint}
+                      value={Number(formState[type.key] || 0)}
+                      price={unitPrices[type.key] ?? 0}
+                      onDecrement={() => handleCountChange(type.key, -1)}
+                      onIncrement={() => handleCountChange(type.key, 1)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-
-            <div>
-              <p className="text-sm font-semibold text-ink">2. Chọn số lượng khách</p>
-              <div className="mt-3 space-y-2.5">
-                {travelerOptions.map((type) => (
-                  <TravelerCounterCard
-                    key={type.key}
-                    label={type.label}
-                    hint={type.hint}
-                    value={Number(formState[type.key] || 0)}
-                    price={unitPrices[type.key] ?? 0}
-                    onDecrement={() => handleCountChange(type.key, -1)}
-                    onIncrement={() => handleCountChange(type.key, 1)}
-                  />
-                ))}
-              </div>
+            <div className="mt-6 flex justify-end">
+              <Button type="button" size="lg" className="min-w-[124px]" onClick={handleNextStep}>
+                Tiếp tục
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
             </div>
-          </div>
+          </>
         ) : (
           <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -317,35 +334,8 @@ export function BookingForm({ tour, onSummaryChange }) {
                 placeholder="Ví dụ: cần đón tại khách sạn, có trẻ nhỏ, cần xuất hóa đơn..."
               />
             </Field>
-          </div>
-        )}
-      </div>
-
-      {status.message && status.type === "error" ? (
-        <div className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{status.message}</div>
-      ) : null}
-
-      <div className="mt-4 rounded-[22px] border border-slate-200 bg-white p-4 shadow-[0_14px_32px_rgba(21,48,74,0.06)]">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Tạm tính</p>
-            <p className={cn("mt-2 text-[1.9rem] font-semibold leading-none text-ink transition", pricePulse && "animate-fade-in-up")}>
-              {formatCurrency(totalPrice)}
-            </p>
-            <p className="mt-2 text-xs text-slate-500">
-              {totalTravelers} khách
-              {selectedPackage?.label ? ` • ${selectedPackage.label}` : ""}
-            </p>
-          </div>
-
-          {step === 1 ? (
-            <Button type="button" size="lg" className="min-w-[124px]" onClick={handleNextStep}>
-              Tiếp tục
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          ) : (
-            <div className="flex gap-2.5">
-              <Button type="button" size="lg" variant="secondary" onClick={() => setStep(1)}>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-between">
+              <Button type="button" variant="secondary" onClick={() => setStep(1)}>
                 <ChevronLeft className="mr-2 h-4 w-4" />
                 Quay lại
               </Button>
@@ -353,9 +343,13 @@ export function BookingForm({ tour, onSummaryChange }) {
                 {isSubmitting ? "Đang gửi..." : "Đặt Tour"}
               </Button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+
+      {status.message && status.type === "error" ? (
+        <div className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{status.message}</div>
+      ) : null}
     </form>
   );
 }
@@ -383,7 +377,7 @@ function TravelerCounterCard({ label, hint, value, price, onDecrement, onIncreme
   const priceText = price === 0 ? "Miễn phí" : `${formatCurrency(price)} / khách`;
 
   return (
-    <div className="rounded-[18px] bg-white px-4 py-3">
+    <div className="rounded-2xl bg-white px-3 py-3">
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -397,7 +391,7 @@ function TravelerCounterCard({ label, hint, value, price, onDecrement, onIncreme
           <CounterButton type="button" onClick={onDecrement} ariaLabel={`Giảm số lượng ${label}`}>
             <Minus className="h-4 w-4" />
           </CounterButton>
-          <span key={value} className="counter-value bump min-w-[1.6rem] text-center text-base font-semibold text-ink">
+          <span key={value} className="counter-value bump min-w-[1.4rem] text-center text-base font-semibold text-ink">
             {value}
           </span>
           <CounterButton type="button" onClick={onIncrement} ariaLabel={`Tăng số lượng ${label}`}>
@@ -412,7 +406,7 @@ function TravelerCounterCard({ label, hint, value, price, onDecrement, onIncreme
 function CounterButton({ children, ariaLabel, ...props }) {
   return (
     <button
-      className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_6px_14px_rgba(21,48,74,0.08)] transition hover:bg-sky hover:text-ocean"
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink shadow-[0_6px_14px_rgba(21,48,74,0.08)] transition hover:bg-sky hover:text-ocean"
       aria-label={ariaLabel}
       {...props}
     >
