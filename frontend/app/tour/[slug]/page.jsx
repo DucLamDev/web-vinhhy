@@ -1,13 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { TourDetailShell } from "@/components/tour/tour-detail-shell";
-import { getTourBySlug, getTours } from "@/lib/api";
+import { getTourBySlug } from "@/lib/api";
 import { buildMetadata, getTourStructuredData } from "@/lib/seo";
 
-export async function generateStaticParams() {
-  const tours = await getTours();
-  return tours.map((tour) => ({ slug: tour.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

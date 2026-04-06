@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Camera,
@@ -18,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { BookingForm } from "@/components/tour/booking-form";
+import { SafeImage } from "@/components/ui/safe-image";
 import { cn, formatCurrency } from "@/lib/utils";
 
 const sectionTabs = [
@@ -42,6 +42,7 @@ export function TourDetailShell({ tour }) {
     travelerCount: 1,
     packageLabel: tour.packageOptions?.[0]?.label || ""
   });
+  const lightboxImage = lightboxIndex === null ? null : galleryImages[lightboxIndex] || null;
 
   const sectionRefs = useRef({});
 
@@ -201,10 +202,15 @@ export function TourDetailShell({ tour }) {
                       {item.image ? (
                         <button
                           type="button"
-                          onClick={() => setLightboxIndex(galleryImages.findIndex((image) => image.url === item.image))}
+                          onClick={() => {
+                            const nextIndex = galleryImages.findIndex((image) => image.url === item.image);
+                            if (nextIndex >= 0) {
+                              setLightboxIndex(nextIndex);
+                            }
+                          }}
                           className="group/image relative min-h-[200px] overflow-hidden rounded-xl text-left shadow-sm transition-shadow hover:shadow-md sm:min-h-[220px]"
                         >
-                          <Image
+                          <SafeImage
                             src={item.image}
                             alt={item.imageAlt || item.title}
                             fill
@@ -244,7 +250,7 @@ export function TourDetailShell({ tour }) {
                     index === 0 ? "sm:col-span-2 xl:col-span-2 xl:min-h-[340px]" : ""
                   )}
                 >
-                  <Image
+                  <SafeImage
                     src={image.url}
                     alt={image.alt || tour.title}
                     fill
@@ -291,7 +297,7 @@ export function TourDetailShell({ tour }) {
         </div>
       </div>
 
-      {lightboxIndex !== null ? (
+      {lightboxImage ? (
         <div className="fixed inset-0 z-[80] bg-slate-950/85 p-4 backdrop-blur-sm" onClick={() => setLightboxIndex(null)}>
           <div className="mx-auto flex h-full max-w-6xl items-center justify-center">
             <button
@@ -314,9 +320,9 @@ export function TourDetailShell({ tour }) {
               <ChevronLeft className="h-5 w-5" />
             </button>
             <div className="relative h-[78vh] w-full overflow-hidden rounded-2xl" onClick={(event) => event.stopPropagation()}>
-              <Image
-                src={galleryImages[lightboxIndex].url}
-                alt={galleryImages[lightboxIndex].alt || tour.title}
+              <SafeImage
+                src={lightboxImage.url}
+                alt={lightboxImage.alt || tour.title}
                 fill
                 quality={95}
                 className="object-contain"
@@ -383,5 +389,11 @@ function ServicePanel({ title, icon, items, tone }) {
 }
 
 function getUniqueImages(images) {
-  return Array.from(new Map(images.filter(Boolean).map((image) => [image.url, image])).values());
+  return Array.from(
+    new Map(
+      images
+        .filter((image) => image?.url && typeof image.url === "string")
+        .map((image) => [image.url, image])
+    ).values()
+  );
 }

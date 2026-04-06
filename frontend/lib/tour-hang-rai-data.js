@@ -107,7 +107,7 @@ export const hangRaiTourOverride = {
   transport: "Xe du lịch",
   pickupPlace: "Nha Trang hoặc Ninh Thuận",
   standard: "Khởi hành hằng ngày",
-  heroImage: "/tour-dong-cuu-vinh-hy-vuon-nho/hang-rai-vinh-hy-vuon-nho-dong-cuu-2.webp",
+  heroImage: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-dong-cuu-vinh-hy-1536x1536.webp",
   galleryImages: [
     {
       url: "/tour-dong-cuu-vinh-hy-vuon-nho/dong-cuu-suoi-tien.webp",

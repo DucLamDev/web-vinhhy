@@ -59,6 +59,17 @@ const resolveUnitPrices = ({ tour, selectedPackage }) => ({
   senior: selectedPackage?.seniorPrice ?? tour.prices?.senior ?? 0
 });
 
+const parseApiResponse = async (response) => {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  const text = await response.text();
+  return { message: text };
+};
+
 export function BookingForm({ tour, onSummaryChange }) {
   const travelerTypes = tour.travelerTypes?.length ? tour.travelerTypes : defaultTravelerTypes;
   const travelerOptions = travelerTypes.filter((type) => ["adult", "child", "infant"].includes(type.key));
@@ -224,7 +235,7 @@ export function BookingForm({ tour, onSummaryChange }) {
         })
       });
 
-      const result = await response.json();
+      const result = await parseApiResponse(response);
 
       if (!response.ok) {
         throw new Error(result.message || "Không thể gửi yêu cầu đặt tour");

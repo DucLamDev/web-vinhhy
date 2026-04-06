@@ -1,18 +1,16 @@
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, CarFront, MapPin, Ticket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { SafeImage } from "@/components/ui/safe-image";
+import { formatCurrency } from "@/lib/utils";
 
 export function TourListCard({ tour }) {
-  const dates = (tour.departureDates || []).slice(0, 4);
-
   return (
     <article className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_16px_35px_rgba(21,48,74,0.08)]">
       <div className="grid lg:grid-cols-[320px_1fr]">
         <div className="relative min-h-[210px]">
-          <Image src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 320px" />
+          <SafeImage src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 320px" />
           <div className="absolute bottom-4 left-4 rounded-full bg-ocean px-4 py-2 text-xs font-semibold text-white">
             {tour.standard || "Tiêu chuẩn"}
           </div>

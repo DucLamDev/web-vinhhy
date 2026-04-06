@@ -74,7 +74,7 @@ export const fallbackTours = [
     pickupPlace: "Nha Trang",
     standard: "Tiêu chuẩn",
     departureDates: ["2026-04-10", "2026-04-20"],
-    heroImage: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2-1.webp",
+    heroImage: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-dong-cuu-vinh-hy-1536x1536.webp",
     galleryImages: [],
     itinerary: [],
     inclusions: ["Xe đưa đón", "Vé tham quan", "HDV"],

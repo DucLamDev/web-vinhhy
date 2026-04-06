@@ -2,6 +2,8 @@ import { TourCatalogSection } from "@/components/sections/tour-catalog-section";
 import { buildMetadata } from "@/lib/seo";
 import { getTours } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = buildMetadata({
   title: "Danh sách tour Vĩnh Hy | Tour Vĩnh Hy",
   description: "Xem danh sách tour Vĩnh Hy, lịch khởi hành, giá tour, điểm đón và lịch trình chi tiết.",

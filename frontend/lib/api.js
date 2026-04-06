@@ -1,5 +1,8 @@
 // API client for Tour Vinh Hy backend
 
+import { fallbackTours } from "./mock-data";
+import { applyTourOverride, applyTourOverrides, getTourOverrideBySlug } from "./tour-overrides";
+
 const getApiBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const normalizeBlog = (blog = {}) => ({
@@ -34,18 +37,24 @@ export const apiRequest = async (path, options = {}) => {
 
 export const getTours = async () => {
   const response = await fetch(`${getApiBaseUrl()}/tours`, {
-    next: { revalidate: 3600, tags: ["tours"] }
+    cache: "no-store"
   });
-  if (!response.ok) return [];
-  return response.json();
+  if (!response.ok) return applyTourOverrides(fallbackTours);
+
+  const tours = await response.json();
+  return applyTourOverrides(tours);
 };
 
 export const getTourBySlug = async (slug) => {
   const response = await fetch(`${getApiBaseUrl()}/tours/${slug}`, {
-    next: { revalidate: 3600, tags: [`tour-${slug}`] }
+    cache: "no-store"
   });
-  if (!response.ok) return null;
-  return response.json();
+  if (!response.ok) {
+    return applyTourOverride(fallbackTours.find((tour) => tour.slug === slug)) || getTourOverrideBySlug(slug);
+  }
+
+  const tour = await response.json();
+  return applyTourOverride(tour);
 };
 
 export const getBlogs = async () => {
