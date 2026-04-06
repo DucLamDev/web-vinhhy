@@ -10,6 +10,16 @@ import { saveToken } from "@/lib/auth";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
+const parseApiResponse = async (response) => {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  return { message: await response.text() };
+};
+
 const formConfig = {
   login: {
     title: "Đăng nhập để quản lý chuyến đi",
@@ -54,7 +64,7 @@ export function AuthFormShell({ mode = "login" }) {
         body: JSON.stringify({ email: verificationState.email })
       });
 
-      const result = await response.json();
+      const result = await parseApiResponse(response);
 
       if (!response.ok) {
         throw new Error(result.message || "Không thể gửi lại email xác thực");
@@ -98,7 +108,7 @@ export function AuthFormShell({ mode = "login" }) {
         body: JSON.stringify(payload)
       });
 
-      const result = await response.json();
+      const result = await parseApiResponse(response);
 
       if (!response.ok) {
         throw new Error(result.message || "Không thể xử lý yêu cầu");
