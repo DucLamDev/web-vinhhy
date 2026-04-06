@@ -1,14 +1,15 @@
 import Booking from "../models/Booking.js";
-import { getTourPackageOption } from "../data/tourPackageCatalog.js";
 import Tour from "../models/Tour.js";
-import { sendBookingConfirmationEmail } from "../services/email.service.js";
+import { sendBookingConfirmationEmail, sendAdminBookingNotification } from "../services/email.service.js";
 import { syncBookingToCrm } from "../services/crm.service.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { ApiError } from "../utils/api-error.js";
 
-const calculateTotalPrice = ({ adult, child, senior, prices }) => {
-  return adult * prices.adult + child * prices.child + senior * prices.senior;
-};
+const calculateTotalPrice = ({ adult, child, senior, infant, prices }) =>
+  adult * prices.adult +
+  child * prices.child +
+  senior * prices.senior +
+  infant * (prices.infant || 0);
 
 export const createBooking = asyncHandler(async (req, res) => {
   const {
@@ -23,7 +24,8 @@ export const createBooking = asyncHandler(async (req, res) => {
     child = 0,
     infant = 0,
     senior = 0,
-    packageOptionId = ""
+    packageOptionId = "",
+    departureOptionId = ""
   } = req.body;
 
   if (!tourSlug || !name || !email || !phone || !travelDate) {
@@ -47,7 +49,20 @@ export const createBooking = asyncHandler(async (req, res) => {
     throw new ApiError(400, "At least one traveler is required");
   }
 
-  const selectedPackage = packageOptionId ? getTourPackageOption(tour.slug, packageOptionId) : null;
+  const selectedDeparture = departureOptionId
+    ? tour.departureOptions?.find((option) => option.id === departureOptionId)
+    : null;
+
+  if (departureOptionId && !selectedDeparture) {
+    throw new ApiError(400, "Selected departure option is invalid");
+  }
+
+  const availablePackageOptions =
+    selectedDeparture?.packageOptions?.length ? selectedDeparture.packageOptions : tour.packageOptions || [];
+
+  const selectedPackage = packageOptionId
+    ? availablePackageOptions.find((option) => option.id === packageOptionId)
+    : null;
 
   if (packageOptionId && !selectedPackage) {
     throw new ApiError(400, "Selected package option is invalid");
@@ -70,6 +85,7 @@ export const createBooking = asyncHandler(async (req, res) => {
   const totalPrice = calculateTotalPrice({
     adult: counts.adult,
     child: counts.child,
+    infant: counts.infant,
     senior: counts.senior,
     prices: appliedPrices
   });
@@ -84,7 +100,7 @@ export const createBooking = asyncHandler(async (req, res) => {
       address: address || ""
     },
     travelDate,
-    notes,
+    notes: [selectedDeparture ? `Khởi hành: ${selectedDeparture.label}` : "", notes].filter(Boolean).join(" | "),
     counts,
     packageSelection: selectedPackage
       ? {
@@ -117,6 +133,12 @@ export const createBooking = asyncHandler(async (req, res) => {
     booking.notifications.emailSent = false;
     booking.notifications.emailError = error.message;
     warnings.push("Unable to send confirmation email immediately.");
+  }
+
+  try {
+    await sendAdminBookingNotification({ booking, tour });
+  } catch (_error) {
+    warnings.push("Unable to send admin notification email.");
   }
 
   try {

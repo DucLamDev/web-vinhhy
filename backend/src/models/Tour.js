@@ -12,7 +12,40 @@ const itineraryItemSchema = new mongoose.Schema(
   {
     time: { type: String, default: "" },
     title: { type: String, required: true },
-    description: { type: String, default: "" }
+    description: { type: String, default: "" },
+    image: { type: String, default: "" },
+    imageAlt: { type: String, default: "" }
+  },
+  { _id: false }
+);
+
+const packageOptionSchema = new mongoose.Schema(
+  {
+    id: String,
+    label: String,
+    shortLabel: String,
+    guestLabel: String,
+    minTravelers: Number,
+    maxTravelers: Number,
+    recommendedCount: Number,
+    adultPrice: Number,
+    childPrice: Number,
+    infantPrice: Number,
+    seniorPrice: Number,
+    note: String
+  },
+  { _id: false }
+);
+
+const departureOptionSchema = new mongoose.Schema(
+  {
+    id: String,
+    label: String,
+    description: String,
+    packageOptions: {
+      type: [packageOptionSchema],
+      default: []
+    }
   },
   { _id: false }
 );
@@ -106,6 +139,29 @@ const tourSchema = new mongoose.Schema(
     seo: {
       metaTitle: { type: String, default: "" },
       metaDescription: { type: String, default: "" }
+    },
+    trustBadges: { type: [String], default: [] },
+    heroStats: {
+      type: [{ value: String, label: String }],
+      default: []
+    },
+    featureHighlights: {
+      type: [{ title: String, description: String }],
+      default: []
+    },
+    tripFacts: { type: [String], default: [] },
+    travelerTypes: {
+      type: [{ key: String, label: String, hint: String }],
+      default: []
+    },
+    packageOptions: {
+      type: [packageOptionSchema],
+      default: []
+    },
+    menu: { type: [String], default: [] },
+    departureOptions: {
+      type: [departureOptionSchema],
+      default: []
     }
   },
   {

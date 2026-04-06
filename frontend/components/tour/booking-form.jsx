@@ -16,8 +16,25 @@ const defaultTravelerTypes = [
   { key: "senior", label: "Người cao tuổi", hint: "" }
 ];
 
+const getDepartureOptions = (tour) => {
+  if (tour.departureOptions?.length) {
+    return tour.departureOptions;
+  }
+
+  return [
+    {
+      id: "default",
+      label: tour.pickupPlace || "Khởi hành mặc định",
+      description: "",
+      packageOptions: tour.packageOptions || []
+    }
+  ];
+};
+
 const buildInitialState = (tour) => {
-  const firstPackage = tour.packageOptions?.[0];
+  const departureOptions = getDepartureOptions(tour);
+  const firstDeparture = departureOptions[0] || null;
+  const firstPackage = firstDeparture?.packageOptions?.[0] || tour.packageOptions?.[0] || null;
 
   return {
     name: "",
@@ -30,6 +47,7 @@ const buildInitialState = (tour) => {
     infant: 0,
     senior: 0,
     notes: "",
+    departureOptionId: firstDeparture?.id || "",
     packageOptionId: firstPackage?.id || ""
   };
 };
@@ -43,15 +61,14 @@ const resolveUnitPrices = ({ tour, selectedPackage }) => ({
 
 export function BookingForm({ tour, onSummaryChange }) {
   const travelerTypes = tour.travelerTypes?.length ? tour.travelerTypes : defaultTravelerTypes;
-  const packageOptions = tour.packageOptions || [];
   const travelerOptions = travelerTypes.filter((type) => ["adult", "child", "infant"].includes(type.key));
+  const departureOptions = useMemo(() => getDepartureOptions(tour), [tour]);
 
   const [formState, setFormState] = useState(() => buildInitialState(tour));
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [pricePulse, setPricePulse] = useState(false);
 
   useEffect(() => {
     setFormState(buildInitialState(tour));
@@ -59,6 +76,13 @@ export function BookingForm({ tour, onSummaryChange }) {
     setStep(1);
     setShowSuccess(false);
   }, [tour]);
+
+  const selectedDeparture = useMemo(
+    () => departureOptions.find((option) => option.id === formState.departureOptionId) || departureOptions[0] || null,
+    [departureOptions, formState.departureOptionId]
+  );
+
+  const packageOptions = selectedDeparture?.packageOptions || tour.packageOptions || [];
 
   const selectedPackage = useMemo(
     () => packageOptions.find((item) => item.id === formState.packageOptionId) || packageOptions[0] || null,
@@ -89,15 +113,14 @@ export function BookingForm({ tour, onSummaryChange }) {
     onSummaryChange?.({
       total: totalPrice,
       travelerCount: totalTravelers,
-      packageLabel: selectedPackage?.label || ""
+      packageLabel: [
+        selectedDeparture?.label || "",
+        selectedPackage?.label || ""
+      ]
+        .filter(Boolean)
+        .join(" • ")
     });
-  }, [onSummaryChange, selectedPackage?.label, totalPrice, totalTravelers]);
-
-  useEffect(() => {
-    setPricePulse(true);
-    const timeout = window.setTimeout(() => setPricePulse(false), 240);
-    return () => window.clearTimeout(timeout);
-  }, [totalPrice]);
+  }, [onSummaryChange, selectedDeparture?.label, selectedPackage?.label, totalPrice, totalTravelers]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -111,6 +134,21 @@ export function BookingForm({ tour, onSummaryChange }) {
     setFormState((current) => ({
       ...current,
       [field]: Math.max(0, Number(current[field] || 0) + delta)
+    }));
+  };
+
+  const handleDepartureChange = (departureOptionId) => {
+    const nextDeparture = departureOptions.find((item) => item.id === departureOptionId) || departureOptions[0] || null;
+    const nextPackage = nextDeparture?.packageOptions?.[0] || null;
+
+    setFormState((current) => ({
+      ...current,
+      departureOptionId,
+      packageOptionId: nextPackage?.id || "",
+      adult: nextPackage?.recommendedCount || 1,
+      child: 0,
+      infant: 0,
+      senior: 0
     }));
   };
 
@@ -155,8 +193,11 @@ export function BookingForm({ tour, onSummaryChange }) {
     setIsSubmitting(true);
     setStatus({ type: "", message: "" });
 
-    const packageNote = selectedPackage ? `Gói đã chọn: ${selectedPackage.label}` : "";
-    const payloadNotes = [packageNote, formState.notes].filter(Boolean).join(" | ");
+    const noteParts = [
+      selectedDeparture ? `Khởi hành: ${selectedDeparture.label}` : "",
+      selectedPackage ? `Gói đã chọn: ${selectedPackage.label}` : "",
+      formState.notes
+    ].filter(Boolean);
 
     try {
       const token = getToken();
@@ -177,8 +218,9 @@ export function BookingForm({ tour, onSummaryChange }) {
           child: Number(formState.child || 0),
           infant: Number(formState.infant || 0),
           senior: Number(formState.senior || 0),
+          departureOptionId: selectedDeparture?.id || "",
           packageOptionId: selectedPackage?.id || "",
-          notes: payloadNotes
+          notes: noteParts.join(" | ")
         })
       });
 
@@ -206,15 +248,15 @@ export function BookingForm({ tour, onSummaryChange }) {
 
   if (showSuccess) {
     return (
-      <div className="rounded-[28px] border border-emerald-100 bg-white p-5 shadow-soft sm:p-6">
-        <div className="rounded-[24px] bg-emerald-50 p-6 text-center">
-          <div className="success-check mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500 text-white">
-            <Check className="h-9 w-9" />
+      <div className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm sm:p-5">
+        <div className="rounded-xl bg-emerald-50 p-5 text-center">
+          <div className="success-check mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500 text-white">
+            <Check className="h-7 w-7" />
           </div>
-          <h3 className="mt-5 text-2xl font-semibold text-ink">Đặt tour thành công</h3>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{status.message}</p>
+          <h3 className="mt-4 text-xl font-semibold text-ink">Đặt tour thành công</h3>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{status.message}</p>
           <Button
-            className="mt-6"
+            className="mt-4"
             onClick={() => {
               setShowSuccess(false);
               setStatus({ type: "", message: "" });
@@ -228,35 +270,76 @@ export function BookingForm({ tour, onSummaryChange }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5 lg:p-5 xl:p-6">
-      <div className="mb-4 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-slate-50 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5">
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">Booking</p>
-          <h2 className="mt-2 text-[1.85rem] font-semibold leading-none text-ink lg:text-[2rem]">Đặt tour</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Gói chọn: <span className="font-semibold text-ink">{selectedPackage?.label || "Chọn gói"}</span>
-          </p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">Booking</p>
+          <h2 className="mt-1 text-xl font-semibold leading-none text-ink">Đặt tour</h2>
         </div>
-
-        <div className="rounded-[24px] bg-white px-4 py-3 text-right shadow-sm">
-          <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Tổng tạm tính</p>
-          <p className="mt-2 text-2xl font-semibold text-coral">{formatCurrency(totalPrice)}</p>
-          <p className="mt-1 text-sm text-slate-500">{totalTravelers} khách</p>
+        <div className="text-right">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Tổng</p>
+          <p className="mt-1 text-xl font-semibold text-coral">{formatCurrency(totalPrice)}</p>
+          <p className="text-xs text-slate-500">{totalTravelers} khách</p>
         </div>
       </div>
 
       <StepIndicator step={step} />
 
-      <div className="mt-4 rounded-[26px] bg-[#f6f4ef] p-4 lg:p-4 xl:p-5">
+      <div className="mt-3 rounded-xl bg-[#f6f4ef] p-3 sm:p-4">
         {step === 1 ? (
           <>
-            <div className="space-y-4 xl:grid xl:grid-cols-[1.08fr_0.92fr] xl:gap-4 xl:space-y-0">
+            <div className="space-y-4">
+              {departureOptions.length > 1 ? (
+                <div>
+                  <p className="mb-2 text-[13px] font-semibold text-ink">1. Chọn điểm khởi hành</p>
+                  <div className="grid gap-2">
+                    {departureOptions.map((option) => {
+                      const isActive = selectedDeparture?.id === option.id;
+
+                      return (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => handleDepartureChange(option.id)}
+                          className={cn(
+                            "w-full rounded-xl border px-3.5 py-3 text-left transition",
+                            isActive
+                              ? "border-ocean bg-[#f3fbfd] ring-1 ring-ocean/20"
+                              : "border-slate-200 bg-white hover:border-slate-300"
+                          )}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div
+                              className={cn(
+                                "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition",
+                                isActive ? "border-ocean bg-ocean" : "border-slate-300 bg-white"
+                              )}
+                            >
+                              {isActive ? <Check className="h-3 w-3 text-white" /> : null}
+                            </div>
+                            <div>
+                              <p className={cn("text-[13px] font-semibold", isActive ? "text-ocean" : "text-ink")}>
+                                {option.label}
+                              </p>
+                              {option.description ? (
+                                <p className="mt-1 text-xs leading-5 text-slate-500">{option.description}</p>
+                              ) : null}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+
               <div>
-                <p className="text-sm font-semibold text-ink">1. Chọn gói dịch vụ</p>
-                <div className="mt-3 grid gap-2.5 min-[380px]:grid-cols-2">
-                  {packageOptions.map((option, index) => {
+                <p className="mb-2 text-[13px] font-semibold text-ink">
+                  {departureOptions.length > 1 ? "2. Chọn gói dịch vụ" : "1. Chọn gói dịch vụ"}
+                </p>
+                <div className="space-y-1.5">
+                  {packageOptions.map((option) => {
                     const isActive = selectedPackage?.id === option.id;
-                    const lastWide = packageOptions.length % 2 === 1 && index === packageOptions.length - 1 ? "min-[380px]:col-span-2" : "";
 
                     return (
                       <button
@@ -264,17 +347,33 @@ export function BookingForm({ tour, onSummaryChange }) {
                         type="button"
                         onClick={() => handlePackageChange(option.id)}
                         className={cn(
-                          "rounded-[20px] border bg-white px-3 py-3 text-left text-[14px] font-semibold leading-5 tracking-[-0.01em] transition min-[380px]:min-h-[68px] lg:text-[15px] xl:px-4 xl:py-3 xl:text-[14px]",
-                          lastWide,
+                          "package-radio-item w-full rounded-xl border px-3.5 py-2.5 text-left transition",
                           isActive
-                            ? "price-card-active border-coral bg-[#fffaf5] text-coral"
-                            : "border-slate-200 text-ink hover:border-coral/40 hover:bg-[#fffdfa]"
+                            ? "border-coral bg-[#fffaf5] ring-1 ring-coral/30"
+                            : "border-slate-200 bg-white hover:border-slate-300"
                         )}
                       >
-                        <div>{option.label}</div>
-                        <p className="mt-2 text-sm font-medium text-slate-500">
-                          {option.adultPrice ? `${formatCurrency(option.adultPrice)} / khách` : "Liên hệ"}
-                        </p>
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={cn(
+                              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition",
+                              isActive ? "border-coral bg-coral" : "border-slate-300 bg-white"
+                            )}
+                          >
+                            {isActive ? <Check className="h-3 w-3 text-white" /> : null}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-baseline justify-between gap-2">
+                              <span className={cn("text-[13px] font-semibold leading-tight", isActive ? "text-coral" : "text-ink")}>
+                                {option.label}
+                              </span>
+                              <span className="shrink-0 text-[13px] font-semibold text-slate-500">
+                                {formatCurrency(option.adultPrice || 0)}
+                              </span>
+                            </div>
+                            {option.note ? <p className="mt-1 text-xs leading-5 text-slate-500">{option.note}</p> : null}
+                          </div>
+                        </div>
                       </button>
                     );
                   })}
@@ -282,8 +381,10 @@ export function BookingForm({ tour, onSummaryChange }) {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-ink">2. Chọn số lượng khách</p>
-                <div className="mt-3 space-y-2.5">
+                <p className="mb-2 text-[13px] font-semibold text-ink">
+                  {departureOptions.length > 1 ? "3. Số lượng khách" : "2. Số lượng khách"}
+                </p>
+                <div className="space-y-1.5">
                   {travelerOptions.map((type) => (
                     <TravelerCounterCard
                       key={type.key}
@@ -298,16 +399,17 @@ export function BookingForm({ tour, onSummaryChange }) {
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex justify-end">
-              <Button type="button" size="lg" className="min-w-[124px]" onClick={handleNextStep}>
+
+            <div className="mt-4 flex justify-end">
+              <Button type="button" size="lg" className="min-w-[110px]" onClick={handleNextStep}>
                 Tiếp tục
-                <ChevronRight className="ml-2 h-4 w-4" />
+                <ChevronRight className="ml-1.5 h-4 w-4" />
               </Button>
             </div>
           </>
         ) : (
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Họ và tên">
                 <Input name="name" value={formState.name} onChange={handleChange} required />
               </Field>
@@ -323,23 +425,24 @@ export function BookingForm({ tour, onSummaryChange }) {
             </div>
 
             <Field label="Địa chỉ">
-              <Input name="address" value={formState.address} onChange={handleChange} placeholder="Khách sạn hoặc điểm hẹn mong muốn" />
+              <Input name="address" value={formState.address} onChange={handleChange} placeholder="Khách sạn hoặc điểm hẹn" />
             </Field>
 
-            <Field label="Ghi chú thêm">
+            <Field label="Ghi chú">
               <Textarea
                 name="notes"
                 value={formState.notes}
                 onChange={handleChange}
-                placeholder="Ví dụ: cần đón tại khách sạn, có trẻ nhỏ, cần xuất hóa đơn..."
+                placeholder="Ví dụ: cần đón tại khách sạn, có trẻ nhỏ..."
+                rows={2}
               />
             </Field>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-between">
-              <Button type="button" variant="secondary" onClick={() => setStep(1)}>
-                <ChevronLeft className="mr-2 h-4 w-4" />
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
+              <Button type="button" variant="secondary" size="sm" onClick={() => setStep(1)}>
+                <ChevronLeft className="mr-1.5 h-4 w-4" />
                 Quay lại
               </Button>
-              <Button type="submit" size="lg" className="min-w-[124px]" disabled={isSubmitting}>
+              <Button type="submit" size="lg" className="min-w-[110px]" disabled={isSubmitting}>
                 {isSubmitting ? "Đang gửi..." : "Đặt Tour"}
               </Button>
             </div>
@@ -348,7 +451,7 @@ export function BookingForm({ tour, onSummaryChange }) {
       </div>
 
       {status.message && status.type === "error" ? (
-        <div className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">{status.message}</div>
+        <div className="mt-3 rounded-xl bg-red-50 px-3 py-2.5 text-[13px] text-red-700">{status.message}</div>
       ) : null}
     </form>
   );
@@ -356,8 +459,10 @@ export function BookingForm({ tour, onSummaryChange }) {
 
 function StepIndicator({ step }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className={cn("step-dot", step > 1 ? "completed" : step === 1 ? "current" : "upcoming")}>{step > 1 ? <CheckCircle2 className="h-4 w-4" /> : "1"}</span>
+    <div className="flex items-center gap-2">
+      <span className={cn("step-dot", step > 1 ? "completed" : step === 1 ? "current" : "upcoming")}>
+        {step > 1 ? <CheckCircle2 className="h-3.5 w-3.5" /> : "1"}
+      </span>
       <span className={cn("step-connector", step > 1 && "completed")} />
       <span className={cn("step-dot", step === 2 ? "current" : "upcoming")}>2</span>
     </div>
@@ -366,36 +471,36 @@ function StepIndicator({ step }) {
 
 function Field({ label, children }) {
   return (
-    <label className="block space-y-2">
-      <span className="text-sm font-medium text-ink">{label}</span>
+    <label className="block space-y-1.5">
+      <span className="text-[13px] font-medium text-ink">{label}</span>
       {children}
     </label>
   );
 }
 
 function TravelerCounterCard({ label, hint, value, price, onDecrement, onIncrement }) {
-  const priceText = price === 0 ? "Miễn phí" : `${formatCurrency(price)} / khách`;
+  const priceText = price === 0 ? "Miễn phí" : formatCurrency(price);
 
   return (
-    <div className="rounded-2xl bg-white px-3 py-3">
-      <div className="flex items-center gap-3">
+    <div className="rounded-xl bg-white px-3 py-2.5">
+      <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-base font-semibold text-ink">{label}</p>
-            {hint ? <span className="text-sm text-slate-500">{hint}</span> : null}
+          <div className="flex items-baseline gap-1.5">
+            <p className="text-[13px] font-semibold text-ink">{label}</p>
+            {hint ? <span className="text-[11px] text-slate-400">{hint}</span> : null}
           </div>
-          <p className={cn("mt-1.5 text-sm font-semibold", price === 0 ? "text-emerald-600" : "text-coral")}>{priceText}</p>
+          <p className={cn("text-[12px] font-semibold", price === 0 ? "text-emerald-600" : "text-coral")}>{priceText}</p>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 rounded-full bg-slate-50 p-1.5">
-          <CounterButton type="button" onClick={onDecrement} ariaLabel={`Giảm số lượng ${label}`}>
-            <Minus className="h-4 w-4" />
+        <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-slate-50 p-1">
+          <CounterButton type="button" onClick={onDecrement} ariaLabel={`Giảm ${label}`}>
+            <Minus className="h-3.5 w-3.5" />
           </CounterButton>
-          <span key={value} className="counter-value bump min-w-[1.4rem] text-center text-base font-semibold text-ink">
+          <span key={value} className="counter-value bump min-w-[1.2rem] text-center text-sm font-semibold text-ink">
             {value}
           </span>
-          <CounterButton type="button" onClick={onIncrement} ariaLabel={`Tăng số lượng ${label}`}>
-            <Plus className="h-4 w-4" />
+          <CounterButton type="button" onClick={onIncrement} ariaLabel={`Tăng ${label}`}>
+            <Plus className="h-3.5 w-3.5" />
           </CounterButton>
         </div>
       </div>
@@ -406,7 +511,7 @@ function TravelerCounterCard({ label, hint, value, price, onDecrement, onIncreme
 function CounterButton({ children, ariaLabel, ...props }) {
   return (
     <button
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink shadow-[0_6px_14px_rgba(21,48,74,0.08)] transition hover:bg-sky hover:text-ocean"
+      className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-ink shadow-sm transition hover:bg-sky hover:text-ocean"
       aria-label={ariaLabel}
       {...props}
     >

@@ -12,6 +12,8 @@ import authRoutes from "./routes/auth.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import tourRoutes from "./routes/tour.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import blogRoutes from "./routes/blog.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import { notFoundHandler } from "./middleware/not-found.middleware.js";
 
@@ -64,6 +66,8 @@ app.use("/auth", authRoutes);
 app.use("/tours", tourRoutes);
 app.use("/booking", bookingRoutes);
 app.use("/user", userRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/admin", adminRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

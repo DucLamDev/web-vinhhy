@@ -6,11 +6,10 @@ import { JourneyMomentsSection } from "@/components/sections/journey-moments-sec
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { VisualGallerySection } from "@/components/sections/visual-gallery-section";
 import { WhyUsSection } from "@/components/sections/why-us-section";
-import { getTours } from "@/lib/api";
-import { getBlogPosts } from "@/lib/wordpress";
+import { getTours, getBlogs } from "@/lib/api";
 
 export default async function HomePage() {
-  const [tours, posts] = await Promise.all([getTours(), getBlogPosts(3)]);
+  const [tours, posts] = await Promise.all([getTours(), getBlogs()]);
 
   return (
     <>

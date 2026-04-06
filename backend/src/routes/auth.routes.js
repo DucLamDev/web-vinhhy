@@ -1,7 +1,13 @@
 import express from "express";
 import passport from "passport";
 
-import { googleAuthSuccess, login, register } from "../controllers/auth.controller.js";
+import {
+  googleAuthSuccess,
+  login,
+  register,
+  resendVerification,
+  verifyEmail
+} from "../controllers/auth.controller.js";
 
 const router = express.Router();
 const isGoogleEnabled = () =>
@@ -11,6 +17,8 @@ const isGoogleEnabled = () =>
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/resend-verification", resendVerification);
+router.get("/verify-email", verifyEmail);
 
 router.get("/google", (req, res, next) => {
   if (!isGoogleEnabled()) {
@@ -24,7 +32,7 @@ router.get("/google", (req, res, next) => {
   })(req, res, next);
 });
 
-router.get("/callback", (req, res, next) => {
+router.get("/google/callback", (req, res, next) => {
   if (!isGoogleEnabled()) {
     return res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/auth/callback?error=google_not_configured`);
   }

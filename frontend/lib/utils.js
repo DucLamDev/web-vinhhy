@@ -12,12 +12,18 @@ export const formatCurrency = (value) =>
     .format(value || 0)
     .replace(/\s?₫/, "đ");
 
-export const formatDate = (value) =>
-  new Intl.DateTimeFormat("vi-VN", {
+export const formatDate = (value) => {
+  if (!value) return "";
+
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return new Intl.DateTimeFormat("vi-VN", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric"
-  }).format(new Date(value));
+  }).format(date);
+};
 
 export const stripHtml = (value = "") => value.replace(/<[^>]*>?/gm, "").trim();
 

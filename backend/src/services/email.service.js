@@ -1,6 +1,10 @@
 import nodemailer from "nodemailer";
 
-import { bookingConfirmationTemplate } from "../utils/email-templates.js";
+import {
+  adminBookingNotificationTemplate,
+  bookingConfirmationTemplate,
+  emailVerificationTemplate
+} from "../utils/email-templates.js";
 
 const createTransporter = () => {
   const host = process.env.SMTP_HOST;
@@ -24,6 +28,35 @@ const createTransporter = () => {
 export const sendBookingConfirmationEmail = async ({ to, booking, tour }) => {
   const transporter = createTransporter();
   const { subject, html, text } = bookingConfirmationTemplate({ booking, tour });
+
+  await transporter.sendMail({
+    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    to,
+    subject,
+    html,
+    text
+  });
+};
+
+export const sendAdminBookingNotification = async ({ booking, tour }) => {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+  if (!adminEmail) return;
+
+  const transporter = createTransporter();
+  const { subject, html, text } = adminBookingNotificationTemplate({ booking, tour });
+
+  await transporter.sendMail({
+    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    to: adminEmail,
+    subject,
+    html,
+    text
+  });
+};
+
+export const sendVerificationEmail = async ({ to, name, verificationUrl }) => {
+  const transporter = createTransporter();
+  const { subject, html, text } = emailVerificationTemplate({ name, verificationUrl });
 
   await transporter.sendMail({
     from: process.env.MAIL_FROM || process.env.SMTP_USER,

@@ -59,9 +59,7 @@ export function SiteHeader() {
 
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-ocean to-teal text-white shadow-soft">
-            <Waves className="h-5 w-5" />
-          </span>
+          <img src="/logo.jpg" alt="Tour Vĩnh Hy" className="h-12 w-12 rounded-full object-cover shadow-soft" />
           <div>
             <p className="text-lg font-semibold text-ink">Tour Vĩnh Hy</p>
             <p className="text-xs uppercase tracking-[0.22em] text-ocean">Biển xanh • Cung đường đẹp</p>

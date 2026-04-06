@@ -47,3 +47,22 @@ export const optionalAuth = async (req, _res, next) => {
     return next();
   }
 };
+
+export const requireAdmin = async (req, _res, next) => {
+  try {
+    const user = await resolveUser(req);
+
+    if (!user) {
+      return next({ statusCode: 401, message: "Unauthorized" });
+    }
+
+    if (user.role !== "admin") {
+      return next({ statusCode: 403, message: "Forbidden: Admin access required" });
+    }
+
+    req.user = user;
+    return next();
+  } catch (_error) {
+    return next({ statusCode: 401, message: "Invalid or expired token" });
+  }
+};

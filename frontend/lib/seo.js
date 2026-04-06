@@ -37,6 +37,10 @@ export const buildMetadata = ({
       title,
       description,
       images: [resolvedImage]
+    },
+    icons: {
+      icon: "/logo.jpg",
+      apple: "/logo.jpg"
     }
   };
 };

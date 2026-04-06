@@ -1,7 +1,11 @@
-import { fallbackTours } from "./mock-data";
-import { applyTourOverride, applyTourOverrides, getTourOverrideBySlug } from "./tour-overrides";
+// API client for Tour Vinh Hy backend
 
 const getApiBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+const normalizeBlog = (blog = {}) => ({
+  ...blog,
+  date: blog.date || blog.createdAt || null
+});
 
 export const getAuthHeaders = (token) =>
   token
@@ -29,35 +33,37 @@ export const apiRequest = async (path, options = {}) => {
 };
 
 export const getTours = async () => {
-  try {
-    const tours = await fetch(`${getApiBaseUrl()}/tours`, {
-      next: { revalidate: 3600, tags: ["tours"] }
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error("Unable to fetch tours");
-      }
-      return response.json();
-    });
-
-    return applyTourOverrides(tours);
-  } catch (_error) {
-    return applyTourOverrides(fallbackTours);
-  }
+  const response = await fetch(`${getApiBaseUrl()}/tours`, {
+    next: { revalidate: 3600, tags: ["tours"] }
+  });
+  if (!response.ok) return [];
+  return response.json();
 };
 
 export const getTourBySlug = async (slug) => {
-  try {
-    const tour = await fetch(`${getApiBaseUrl()}/tours/${slug}`, {
-      next: { revalidate: 3600, tags: [`tour-${slug}`] }
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error("Unable to fetch tour");
-      }
-      return response.json();
-    });
+  const response = await fetch(`${getApiBaseUrl()}/tours/${slug}`, {
+    next: { revalidate: 3600, tags: [`tour-${slug}`] }
+  });
+  if (!response.ok) return null;
+  return response.json();
+};
 
-    return applyTourOverride(tour);
-  } catch (_error) {
-    return applyTourOverride(fallbackTours.find((tour) => tour.slug === slug)) || getTourOverrideBySlug(slug);
-  }
+export const getBlogs = async () => {
+  const response = await fetch(`${getApiBaseUrl()}/blogs`, {
+    next: { revalidate: 3600, tags: ["blogs"] }
+  });
+  if (!response.ok) return [];
+  const blogs = await response.json();
+  return blogs.map(normalizeBlog);
+};
+
+export const getBlogBySlug = async (slug) => {
+  const response = await fetch(`${getApiBaseUrl()}/blogs/${slug}`, {
+    next: { revalidate: 3600, tags: [`blog-${slug}`] }
+  });
+
+  if (!response.ok) return null;
+
+  const blog = await response.json();
+  return normalizeBlog(blog);
 };

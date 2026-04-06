@@ -1,101 +1,129 @@
 export const fallbackTours = [
   {
-    title: "Tour Vĩnh Hy 1 ngày cao cấp",
+    title: "Tour Vĩnh Hy – Ninh Chữ 2 Ngày 2 Đêm: Khám Phá Vịnh Vĩnh Hy & Hang Rái",
+    slug: "tour-vinh-hy-ninh-chu-2-ngay-2-dem",
+    summary: "Hành trình trọn vẹn khám phá Vĩnh Hy, Hang Rái, Vườn Nho và Ninh Chữ.",
+    description: "Khám phá Vịnh Vĩnh Hy tuyệt đẹp, check-in Hang Rái, tham quan Vườn nho Ninh Thuận và nghỉ dưỡng tại biển Ninh Chữ trong lịch trình 2 ngày 2 đêm.",
+    location: "Vĩnh Hy - Hang Rái - Ninh Chữ",
+    duration: "2 ngày 2 đêm",
+    tourCode: "VHY02",
+    transport: "Xe du lịch",
+    pickupPlace: "Ninh Thuận",
+    standard: "Tiêu chuẩn",
+    departureDates: ["2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01"],
+    heroImage: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2.webp",
+    galleryImages: [],
+    itinerary: [],
+    inclusions: ["Khách sạn 2 sao", "Ăn uống", "Xe đưa đón", "Tàu đáy kính"],
+    exclusions: ["VAT", "Đồ uống cá nhân"],
+    prices: { adult: 1690000, child: 1267500, senior: 1690000 },
+    featured: true,
+    seo: { metaTitle: "Tour Vĩnh Hy 2 Ngày 2 Đêm", metaDescription: "Tour khám phá Vĩnh Hy, Hang Rái, Ninh Chữ 2 ngày 2 đêm." }
+  },
+  {
+    title: "Tour câu mực đêm Vĩnh Hy",
+    slug: "tour-cau-muc-dem-vinh-vinh-hy",
+    summary: "Trải nghiệm mới mẻ và thú vị trên biển Vĩnh Hy về đêm.",
+    description: "Tham gia chuyến tàu câu mực nháy, thư giãn giữa không gian biển đêm thanh bình của Vĩnh Hy.",
+    location: "Vĩnh Hy, Ninh Thuận",
+    duration: "Buổi tối",
+    tourCode: "VHY03",
+    transport: "Tàu du lịch",
+    pickupPlace: "Ninh Thuận",
+    standard: "Trải nghiệm",
+    departureDates: ["2026-04-06", "2026-04-12", "2026-04-18", "2026-04-25"],
+    heroImage: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy.webp",
+    galleryImages: [],
+    itinerary: [],
+    inclusions: ["Tàu du lịch", "Thiết bị câu", "Hướng dẫn viên"],
+    exclusions: ["Di chuyển đến bến", "Tiệc BBQ"],
+    prices: { adult: 350000, child: 245000, senior: 350000 },
+    featured: true,
+    seo: { metaTitle: "Tour câu mực đêm Vĩnh Hy", metaDescription: "Trải nghiệm câu mực đêm thú vị tại Vịnh Vĩnh Hy." }
+  },
+  {
+    title: "Tour vịnh Vĩnh Hy Ninh Thuận",
+    slug: "tour-vinh-hy-ninh-thuan",
+    summary: "Tham quan Vịnh Vĩnh Hy, lặn ngắm san hô bằng tàu đáy kính.",
+    description: "Hành trình tham quan một trong những vịnh biển đẹp nhất Việt Nam.",
+    location: "Vĩnh Hy, Ninh Thuận",
+    duration: "1 ngày",
+    tourCode: "VHY04",
+    transport: "Tàu đáy kính",
+    pickupPlace: "Ninh Thuận",
+    standard: "Tiêu chuẩn",
+    departureDates: ["2026-04-08", "2026-04-15"],
+    heroImage: "/tour-vinhhy-1ngay/tour-vinh-hy-letfly-_2_-768x1024.webp",
+    galleryImages: [],
+    itinerary: [],
+    inclusions: ["Tàu đáy kính", "Áo phao", "Ăn nhẹ"],
+    exclusions: ["Chi phí cá nhân"],
+    prices: { adult: 599000, child: 400000, senior: 599000 },
+    featured: false,
+    seo: { metaTitle: "Tour vịnh Vĩnh Hy", metaDescription: "Trải nghiệm tham quan Vịnh Vĩnh Hy 599k." }
+  },
+  {
+    title: "Tour Đồng Cừu – Vĩnh Hy – Vườn Nho",
+    slug: "tour-dong-cuu-vinh-hy-vuon-nho",
+    summary: "Check-in đồng cừu thơ mộng, thưởng thức nho tại vườn và ngắm biển Vĩnh Hy.",
+    description: "Lịch trình lý tưởng cho những tín đồ sống ảo trải dài từ đồng cừu Suối Tiên đến Vịnh Vĩnh Hy và đặc sản vườn nho.",
+    location: "Ninh Thuận",
+    duration: "1 ngày",
+    tourCode: "VHY05",
+    transport: "Xe du lịch",
+    pickupPlace: "Nha Trang",
+    standard: "Tiêu chuẩn",
+    departureDates: ["2026-04-10", "2026-04-20"],
+    heroImage: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2-1.webp",
+    galleryImages: [],
+    itinerary: [],
+    inclusions: ["Xe đưa đón", "Vé tham quan", "HDV"],
+    exclusions: ["Chi phí cá nhân"],
+    prices: { adult: 840000, child: 600000, senior: 840000 },
+    featured: true,
+    seo: { metaTitle: "Tour Đồng Cừu Vĩnh Hy Vườn Nho", metaDescription: "Khám phá đồng cừu, vịnh Vĩnh Hy và cảnh sắc vườn nho." }
+  },
+  {
+    title: "Tour Vịnh Vĩnh Hy 1 ngày",
     slug: "tour-vinh-hy-1-ngay",
-    summary: "Trọn gói tham quan vịnh, tàu đáy kính, bữa trưa hải sản và những điểm ngắm biển đẹp nhất.",
-    description:
-      "Lịch trình 1 ngày phù hợp cho gia đình và nhóm bạn muốn tận hưởng cảnh biển trong xanh, di chuyển nhẹ nhàng và có nhiều thời gian chụp ảnh.",
+    summary: "Khám phá Vĩnh Hy đầy đủ trong 1 ngày từ Nha Trang.",
+    description: "Hành trình 1 ngày tham quan Vĩnh Hy, Hang Rái...",
     location: "Vĩnh Hy, Ninh Thuận",
     duration: "1 ngày",
     tourCode: "VHY01",
-    transport: "Xe du lịch + tàu đáy kính",
-    pickupPlace: "Phan Rang",
-    standard: "Tiêu chuẩn",
-    departureDates: ["2026-04-06", "2026-04-12", "2026-04-18", "2026-04-25"],
-    heroImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
-    galleryImages: [
-      {
-        url: "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=1200&q=80",
-        alt: "Tàu đáy kính Vĩnh Hy"
-      }
-    ],
-    itinerary: [
-      {
-        time: "07:30",
-        title: "Đón khách và khởi hành",
-        description: "Hướng dẫn viên đón khách tại điểm hẹn và bắt đầu hành trình dọc cung đường biển."
-      }
-    ],
-    inclusions: ["Xe đưa đón", "Tàu đáy kính", "Bữa trưa", "Hướng dẫn viên"],
-    exclusions: ["Chi phí cá nhân"],
-    prices: {
-      adult: 1290000,
-      child: 890000,
-      senior: 1090000
-    },
-    featured: true,
-    seo: {
-      metaTitle: "Tour Vĩnh Hy 1 ngày cao cấp",
-      metaDescription: "Đặt tour Vĩnh Hy 1 ngày trọn gói với tàu đáy kính, bữa trưa hải sản và lịch trình đẹp."
-    }
-  },
-  {
-    title: "Tour Vĩnh Hy - Hang Rái - Ninh Chữ",
-    slug: "tour-vinh-hy-hang-rai-ninh-chu",
-    summary: "Hành trình 2 ngày 1 đêm kết hợp biển xanh, bình minh Hang Rái và nghỉ dưỡng tại Ninh Chữ.",
-    description:
-      "Combo phù hợp cho cặp đôi, gia đình và nhóm bạn muốn có chuyến đi cuối tuần nhẹ nhàng nhưng vẫn nhiều điểm dừng chân đẹp.",
-    location: "Vĩnh Hy - Hang Rái - Ninh Chữ",
-    duration: "2 ngày 1 đêm",
-    tourCode: "VHY02",
     transport: "Xe du lịch",
-    pickupPlace: "TP. Hồ Chí Minh / Phan Rang",
+    pickupPlace: "Nha Trang",
     standard: "Cao cấp",
-    departureDates: ["2026-04-10", "2026-04-17", "2026-04-24", "2026-05-01"],
-    heroImage: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80",
+    departureDates: ["2026-04-12", "2026-04-19"],
+    heroImage: "/tour-vinhhy-1ngay/tour-vinh-hy-letfly-_10_-1024x768.webp",
     galleryImages: [],
     itinerary: [],
-    inclusions: ["Khách sạn", "Ăn sáng", "Xe đưa đón"],
-    exclusions: ["Đồ uống ngoài chương trình"],
-    prices: {
-      adult: 2490000,
-      child: 1690000,
-      senior: 2190000
-    },
+    inclusions: ["Tàu đáy kính", "Ăn trưa", "Xe đưa đón", "HDV"],
+    exclusions: ["Chi phí ngoài"],
+    prices: { adult: 750000, child: 525000, senior: 750000 },
     featured: true,
-    seo: {
-      metaTitle: "Tour Vĩnh Hy - Hang Rái - Ninh Chữ",
-      metaDescription: "Lịch trình 2 ngày 1 đêm khám phá Vĩnh Hy, Hang Rái và biển Ninh Chữ với nhiều điểm check-in đẹp."
-    }
+    seo: { metaTitle: "Tour Vịnh Vĩnh Hy 1 Ngày", metaDescription: "Trọn gói tour Vĩnh Hy 1 ngày." }
   },
   {
-    title: "Tour lặn ngắm san hô Vĩnh Hy",
-    slug: "tour-lan-ngam-san-ho-vinh-hy",
-    summary: "Trải nghiệm snorkeling cho du khách yêu biển, thích vận động và săn ảnh đẹp dưới nắng.",
-    description:
-      "Tour tập trung vào hoạt động ngoài trời, có hướng dẫn viên, thiết bị đầy đủ và các điểm dừng ngắm cảnh trên mặt nước.",
-    location: "Vĩnh Hy, Ninh Thuận",
+    title: "Tour Hang Rái – Vĩnh Hy – Vườn Nho – Đồng Cừu",
+    slug: "tour-hang-rai-vinh-hy-vuon-nho-dong-cuu",
+    summary: "Khám phá tất cả các điểm hot nhất Ninh Thuận trong 1 ngày.",
+    description: "Tour gói gọn 4 điểm đến hấp dẫn nhất: Hang Rái huyền ảo, Vĩnh Hy hoang sơ, Vườn Nho trĩu quả và Đồng Cừu yên bình.",
+    location: "Ninh Thuận",
     duration: "1 ngày",
-    tourCode: "VHY03",
-    transport: "Cano cao tốc",
-    pickupPlace: "Bến Vĩnh Hy",
-    standard: "Trải nghiệm",
-    departureDates: ["2026-04-08", "2026-04-15", "2026-04-22", "2026-04-29"],
-    heroImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+    tourCode: "VHY06",
+    transport: "Xe du lịch",
+    pickupPlace: "Nha Trang",
+    standard: "Tiêu chuẩn",
+    departureDates: ["2026-04-14", "2026-04-21"],
+    heroImage: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vuon-nho-ninh-thuan-2-1.webp",
     galleryImages: [],
     itinerary: [],
-    inclusions: ["Thiết bị lặn", "Hướng dẫn viên", "Ăn nhẹ"],
-    exclusions: ["Xe đưa đón ngoài trung tâm"],
-    prices: {
-      adult: 1590000,
-      child: 1090000,
-      senior: 1390000
-    },
+    inclusions: ["Xe đưa đón", "HDV", "Ăn trưa", "Vé vào cổng"],
+    exclusions: ["Chi phí cá nhân"],
+    prices: { adult: 650000, child: 450000, senior: 650000 },
     featured: false,
-    seo: {
-      metaTitle: "Tour lặn ngắm san hô Vĩnh Hy",
-      metaDescription: "Book snorkeling tour Vĩnh Hy với thiết bị đầy đủ, lịch trình đẹp và phù hợp cho nhóm bạn trẻ."
-    }
+    seo: { metaTitle: "Tour Hang Rái Vĩnh Hy Vườn Nho Đồng Cừu", metaDescription: "Combo 4 địa danh nổi bật của Ninh Thuận." }
   }
 ];
 

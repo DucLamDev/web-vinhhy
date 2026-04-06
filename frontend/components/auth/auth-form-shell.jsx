@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { saveToken } from "@/lib/auth";
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 const formConfig = {
   login: {
     title: "Đăng nhập để quản lý chuyến đi",
@@ -34,6 +36,40 @@ export function AuthFormShell({ mode = "login" }) {
   const config = formConfig[mode];
   const [status, setStatus] = useState({ type: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [verificationState, setVerificationState] = useState({ email: "", visible: false, message: "" });
+  const [isResending, setIsResending] = useState(false);
+
+  const handleResendVerification = async () => {
+    if (!verificationState.email) return;
+
+    setIsResending(true);
+    setStatus({ type: "", message: "" });
+
+    try {
+      const response = await fetch(`${apiBaseUrl}/auth/resend-verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email: verificationState.email })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Không thể gửi lại email xác thực");
+      }
+
+      setVerificationState((current) => ({
+        ...current,
+        message: result.message
+      }));
+    } catch (error) {
+      setStatus({ type: "error", message: error.message });
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -54,7 +90,7 @@ export function AuthFormShell({ mode = "login" }) {
         delete payload.phone;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}${config.endpoint}`, {
+      const response = await fetch(`${apiBaseUrl}${config.endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -66,6 +102,16 @@ export function AuthFormShell({ mode = "login" }) {
 
       if (!response.ok) {
         throw new Error(result.message || "Không thể xử lý yêu cầu");
+      }
+
+      if (mode === "register" || result.requiresVerification) {
+        setVerificationState({
+          email: result.email || payload.email || "",
+          visible: true,
+          message: result.message || "Vui lòng kiểm tra email để xác thực tài khoản."
+        });
+        event.currentTarget.reset();
+        return;
       }
 
       saveToken(result.token);
@@ -88,7 +134,9 @@ export function AuthFormShell({ mode = "login" }) {
           {[
             "Lưu nhanh thông tin liên hệ cho các lần đặt tiếp theo",
             "Theo dõi lịch sử booking trên điện thoại thuận tiện hơn",
-            "Đăng nhập Google chỉ với một chạm ở ngay bên dưới"
+            mode === "register"
+              ? "Tài khoản mới cần xác thực email trước khi đăng nhập"
+              : "Đăng nhập Google chỉ với một chạm ở ngay bên dưới"
           ].map((item) => (
             <div key={item} className="rounded-3xl bg-white/80 px-4 py-4 text-sm text-slate-600 shadow-[0_12px_30px_rgba(21,48,74,0.06)]">
               {item}
@@ -98,54 +146,86 @@ export function AuthFormShell({ mode = "login" }) {
       </div>
 
       <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === "register" ? (
-            <>
-              <Field label="Họ và tên">
-                <Input name="name" required placeholder="Nguyễn Văn A" />
+        {verificationState.visible && mode === "register" ? (
+          <div className="space-y-5">
+            <div className="rounded-[28px] bg-emerald-50 px-5 py-6 text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">Kiểm tra email</p>
+              <h2 className="mt-3 text-3xl font-semibold text-ink">Tài khoản gần như đã xong</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                {verificationState.message}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-ink">{verificationState.email}</p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-7 text-slate-600">
+              Sau khi bấm vào liên kết xác thực trong email, bạn có thể quay lại trang đăng nhập để vào tài khoản.
+            </div>
+
+            {status.message ? (
+              <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">{status.message}</div>
+            ) : null}
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button type="button" className="flex-1" onClick={handleResendVerification} disabled={isResending}>
+                {isResending ? "Đang gửi lại..." : "Gửi lại email xác thực"}
+              </Button>
+              <Button asChild type="button" variant="secondary" className="flex-1">
+                <Link href="/dang-nhap">Đi tới đăng nhập</Link>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {mode === "register" ? (
+                <>
+                  <Field label="Họ và tên">
+                    <Input name="name" required placeholder="Nguyễn Văn A" />
+                  </Field>
+                  <Field label="Số điện thoại">
+                    <Input name="phone" placeholder="0900 000 000" />
+                  </Field>
+                </>
+              ) : null}
+
+              <Field label="Email">
+                <Input type="email" name="email" required placeholder="ban@email.com" />
               </Field>
-              <Field label="Số điện thoại">
-                <Input name="phone" placeholder="0900 000 000" />
+
+              <Field label="Mật khẩu">
+                <Input type="password" name="password" required placeholder="Nhập mật khẩu" />
               </Field>
-            </>
-          ) : null}
 
-          <Field label="Email">
-            <Input type="email" name="email" required placeholder="ban@email.com" />
-          </Field>
+              {status.message ? (
+                <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">{status.message}</div>
+              ) : null}
 
-          <Field label="Mật khẩu">
-            <Input type="password" name="password" required placeholder="Nhập mật khẩu" />
-          </Field>
+              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                {isSubmitting ? "Đang xử lý..." : config.submitText}
+              </Button>
+            </form>
 
-          {status.message ? (
-            <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">{status.message}</div>
-          ) : null}
+            <div className="my-6 flex items-center gap-3 text-sm text-slate-400">
+              <span className="h-px flex-1 bg-slate-200" />
+              <span>hoặc</span>
+              <span className="h-px flex-1 bg-slate-200" />
+            </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
-            {isSubmitting ? "Đang xử lý..." : config.submitText}
-          </Button>
-        </form>
+            <Button asChild variant="secondary" size="lg" className="w-full gap-3">
+              <a href={process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL || "http://localhost:5000/auth/google"}>
+                <GoogleIcon />
+                Đăng nhập bằng Google
+              </a>
+            </Button>
 
-        <div className="my-6 flex items-center gap-3 text-sm text-slate-400">
-          <span className="h-px flex-1 bg-slate-200" />
-          <span>hoặc</span>
-          <span className="h-px flex-1 bg-slate-200" />
-        </div>
-
-        <Button asChild variant="secondary" size="lg" className="w-full gap-3">
-          <a href={process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL || "http://localhost:5000/auth/google"}>
-            <GoogleIcon />
-            Đăng nhập bằng Google
-          </a>
-        </Button>
-
-        <p className="mt-6 text-center text-sm text-slate-500">
-          {config.alternateText}{" "}
-          <Link href={config.alternateHref} className="font-semibold text-ocean">
-            {config.alternateLabel}
-          </Link>
-        </p>
+            <p className="mt-6 text-center text-sm text-slate-500">
+              {config.alternateText}{" "}
+              <Link href={config.alternateHref} className="font-semibold text-ocean">
+                {config.alternateLabel}
+              </Link>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

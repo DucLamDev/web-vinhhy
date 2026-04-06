@@ -1,6 +1,6 @@
 import { BlogCard } from "@/components/blog/blog-card";
 import { buildMetadata } from "@/lib/seo";
-import { getBlogPosts } from "@/lib/wordpress";
+import { getBlogs } from "@/lib/api";
 
 export const metadata = buildMetadata({
   title: "Cẩm nang du lịch Vĩnh Hy | Tour Vĩnh Hy",
@@ -9,7 +9,7 @@ export const metadata = buildMetadata({
 });
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts(9);
+  const posts = await getBlogs();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">

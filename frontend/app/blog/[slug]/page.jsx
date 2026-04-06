@@ -2,19 +2,19 @@ import { notFound } from "next/navigation";
 
 import { getBlogMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
-import { getBlogPostBySlug, getBlogPosts } from "@/lib/wordpress";
+import { getBlogBySlug, getBlogs } from "@/lib/api";
 
 export async function generateStaticParams() {
-  const posts = await getBlogPosts(20);
+  const posts = await getBlogs();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }) {
-  const post = await getBlogPostBySlug((await params).slug);
+  const post = await getBlogBySlug((await params).slug);
 
   if (!post) {
     return getBlogMetadata({
-      slug: params.slug,
+      slug: (await params).slug,
       title: "Không tìm thấy bài viết",
       excerpt: "Bài viết bạn tìm không tồn tại.",
       featuredImage:
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogDetailPage({ params }) {
-  const post = await getBlogPostBySlug((await params).slug);
+  const post = await getBlogBySlug((await params).slug);
 
   if (!post) {
     notFound();

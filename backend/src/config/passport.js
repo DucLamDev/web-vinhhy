@@ -30,7 +30,8 @@ export const configurePassport = () => {
               name: profile.displayName,
               email: primaryEmail,
               avatar: profile.photos?.[0]?.value,
-              provider: "google"
+              provider: "google",
+              emailVerified: true
             });
           } else {
             user.googleId = profile.id;
@@ -38,6 +39,7 @@ export const configurePassport = () => {
             user.email = primaryEmail || user.email;
             user.avatar = profile.photos?.[0]?.value || user.avatar;
             user.provider = "google";
+            user.emailVerified = true;
             await user.save();
           }
 

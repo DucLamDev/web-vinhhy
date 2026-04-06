@@ -6,7 +6,10 @@ export function SiteFooter() {
     <footer className="mt-8 hidden border-t border-slate-200 bg-white md:block">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.3fr_1fr_1fr] lg:px-8">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-ocean">Tour Vĩnh Hy</p>
+          <div className="flex items-center gap-3">
+            <img src="/logo.jpg" alt="Tour Vĩnh Hy" className="h-10 w-10 rounded-full object-cover shadow-soft" />
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-ocean">Tour Vĩnh Hy</p>
+          </div>
           {/* <h3 className="mt-3 text-3xl font-semibold text-ink">Đi để thấy biển Ninh Thuận đẹp và dịu hơn nhiều so với tưởng tượng.</h3> */}
           <p className="mt-4 max-w-md text-sm leading-7 text-slate-600">
             Website chuyên tour Vĩnh Hy, Hang Rái và Ninh Chữ với giao diện xem tour thân thiện, nhiều hình ảnh và quy trình đặt chỗ rõ ràng.
