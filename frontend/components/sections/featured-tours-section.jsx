@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { CalendarDays, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SafeImage } from "@/components/ui/safe-image";
 import { formatCurrency } from "@/lib/utils";
 
 export function FeaturedToursSection({ tours }) {
@@ -17,7 +17,6 @@ export function FeaturedToursSection({ tours }) {
         </div>
       </div>
 
-      {/* Mobile: horizontal snap scroll */}
       <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:hidden">
         {tours.slice(0, 3).map((tour) => (
           <article
@@ -25,7 +24,7 @@ export function FeaturedToursSection({ tours }) {
             className="flex w-[82vw] max-w-[340px] shrink-0 snap-start flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-soft"
           >
             <div className="relative h-48 shrink-0">
-              <Image src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="340px" />
+              <SafeImage src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="340px" />
               <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-ocean">
                 {tour.standard || "Tiêu chuẩn"}
               </div>
@@ -49,7 +48,9 @@ export function FeaturedToursSection({ tours }) {
                   <p className="text-lg font-bold leading-none text-coral">{formatCurrency(tour.prices.adult)}</p>
                 </div>
                 <Button asChild size="sm">
-                  <Link href={`/tour/${tour.slug}`}>Xem chi tiết</Link>
+                  <Link href={`/tour/${tour.slug}`} prefetch>
+                    Xem chi tiết
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -57,7 +58,6 @@ export function FeaturedToursSection({ tours }) {
         ))}
       </div>
 
-      {/* Desktop: 3-column grid */}
       <div className="mt-10 hidden gap-6 lg:grid lg:grid-cols-3">
         {tours.slice(0, 3).map((tour) => (
           <article
@@ -65,7 +65,7 @@ export function FeaturedToursSection({ tours }) {
             className="flex h-full flex-col overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-soft"
           >
             <div className="relative h-64 shrink-0">
-              <Image src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="33vw" />
+              <SafeImage src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="33vw" />
               <div className="absolute left-4 top-4 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ocean">
                 {tour.standard || "Tiêu chuẩn"}
               </div>
@@ -94,7 +94,9 @@ export function FeaturedToursSection({ tours }) {
                     </p>
                   </div>
                   <Button asChild>
-                    <Link href={`/tour/${tour.slug}`}>Xem chi tiết</Link>
+                    <Link href={`/tour/${tour.slug}`} prefetch>
+                      Xem chi tiết
+                    </Link>
                   </Button>
                 </div>
               </div>

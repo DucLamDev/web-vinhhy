@@ -13,7 +13,6 @@ export function BlogPreviewSection({ posts }) {
           </p>
         </div>
 
-        {/* Mobile: horizontal snap scroll */}
         <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:hidden">
           {posts.map((post) => (
             <article
@@ -24,12 +23,12 @@ export function BlogPreviewSection({ posts }) {
               <div className="flex flex-1 flex-col gap-2 p-4">
                 <p className="text-[10px] uppercase tracking-widest text-slate-400">{formatDate(post.date)}</p>
                 <h3 className="line-clamp-2 text-sm font-bold leading-snug text-ink">
-                  <Link href={`/blog/${post.slug}`} className="transition hover:text-ocean">
+                  <Link href={`/blog/${post.slug}`} prefetch className="transition hover:text-ocean">
                     {post.title}
                   </Link>
                 </h3>
                 <p className="line-clamp-2 text-xs leading-5 text-slate-500">{post.excerpt}</p>
-                <Link href={`/blog/${post.slug}`} className="mt-auto pt-2 text-xs font-semibold text-ocean">
+                <Link href={`/blog/${post.slug}`} prefetch className="mt-auto pt-2 text-xs font-semibold text-ocean">
                   Đọc bài viết →
                 </Link>
               </div>
@@ -37,7 +36,6 @@ export function BlogPreviewSection({ posts }) {
           ))}
         </div>
 
-        {/* Desktop: 3-column grid */}
         <div className="mt-10 hidden gap-6 lg:grid lg:grid-cols-3">
           {posts.map((post) => (
             <article
@@ -48,12 +46,12 @@ export function BlogPreviewSection({ posts }) {
               <div className="flex flex-1 flex-col gap-3 p-5">
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{formatDate(post.date)}</p>
                 <h3 className="line-clamp-2 text-xl font-bold leading-snug text-ink">
-                  <Link href={`/blog/${post.slug}`} className="transition hover:text-ocean">
+                  <Link href={`/blog/${post.slug}`} prefetch className="transition hover:text-ocean">
                     {post.title}
                   </Link>
                 </h3>
                 <p className="line-clamp-3 text-sm leading-7 text-slate-600">{post.excerpt}</p>
-                <Link href={`/blog/${post.slug}`} className="mt-auto pt-1 text-sm font-semibold text-ocean">
+                <Link href={`/blog/${post.slug}`} prefetch className="mt-auto pt-1 text-sm font-semibold text-ocean">
                   Đọc bài viết →
                 </Link>
               </div>

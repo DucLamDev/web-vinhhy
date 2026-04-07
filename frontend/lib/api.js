@@ -37,7 +37,7 @@ export const apiRequest = async (path, options = {}) => {
 
 export const getTours = async () => {
   const response = await fetch(`${getApiBaseUrl()}/tours`, {
-    cache: "no-store"
+    next: { revalidate: 60, tags: ["tours"] }
   });
   if (!response.ok) return applyTourOverrides(fallbackTours);
 
@@ -47,7 +47,7 @@ export const getTours = async () => {
 
 export const getTourBySlug = async (slug) => {
   const response = await fetch(`${getApiBaseUrl()}/tours/${slug}`, {
-    cache: "no-store"
+    next: { revalidate: 60, tags: [`tour-${slug}`] }
   });
   if (!response.ok) {
     return applyTourOverride(fallbackTours.find((tour) => tour.slug === slug)) || getTourOverrideBySlug(slug);

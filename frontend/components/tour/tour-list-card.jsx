@@ -28,9 +28,9 @@ export function TourListCard({ tour }) {
               </div>
               <p className="mt-4 text-sm leading-7 text-slate-600">{tour.summary}</p>
               <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="rounded-xl border border-coral/40 bg-coral/5 px-3 py-1.5 text-xs font-semibold text-coral">
-                    Mở hàng tuần
-                  </span>
+                <span className="rounded-xl border border-coral/40 bg-coral/5 px-3 py-1.5 text-xs font-semibold text-coral">
+                  Mở hằng tuần
+                </span>
               </div>
             </div>
 
@@ -41,7 +41,9 @@ export function TourListCard({ tour }) {
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-500">Đã bao gồm các dịch vụ cơ bản trong tour.</p>
               <Button asChild className="mt-5 w-full">
-                <Link href={`/tour/${tour.slug}`}>Xem chi tiết</Link>
+                <Link href={`/tour/${tour.slug}`} prefetch>
+                  Xem chi tiết
+                </Link>
               </Button>
             </div>
           </div>

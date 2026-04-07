@@ -2,7 +2,7 @@ import { TourCatalogSection } from "@/components/sections/tour-catalog-section";
 import { buildMetadata } from "@/lib/seo";
 import { getTours } from "@/lib/api";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: "Danh sách tour Vĩnh Hy | Tour Vĩnh Hy",

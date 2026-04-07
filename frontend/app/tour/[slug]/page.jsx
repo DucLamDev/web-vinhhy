@@ -4,7 +4,7 @@ import { TourDetailShell } from "@/components/tour/tour-detail-shell";
 import { getTourBySlug } from "@/lib/api";
 import { buildMetadata, getTourStructuredData } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
