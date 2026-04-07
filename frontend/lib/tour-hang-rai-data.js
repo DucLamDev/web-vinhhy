@@ -132,6 +132,22 @@ export const hangRaiTourOverride = {
     {
       url: "/tour-dong-cuu-vinh-hy-vuon-nho/hang-rai-vinh-hy-dong-cuu-vuon-nho11-1024x1024.webp",
       alt: "Khoảnh khắc sống ảo tại Hang Rái"
+    },
+    {
+      url: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-vinh-hy-letfly-_10_.webp",
+      alt: "Hành trình tour Vĩnh Hy với đường bờ biển và xe du lịch"
+    },
+    {
+      url: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-vinh-hy-letfly-_7_.webp",
+      alt: "Cảnh biển Vĩnh Hy sau khi tham quan"
+    },
+    {
+      url: "/tour-dong-cuu-vinh-hy-vuon-nho/vinh-vinh-hy-2.jpg",
+      alt: "Vịnh Vĩnh Hy đẹp nhất trong ngày"
+    },
+    {
+      url: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-dong-cuu-vinh-hy-1536x1536.webp",
+      alt: "Khung cảnh tour Đồng Cừu Vĩnh Hy Vườn Nho"
     }
   ],
   itinerary: [

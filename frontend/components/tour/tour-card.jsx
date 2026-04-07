@@ -1,15 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SafeImage } from "@/components/ui/safe-image";
 import { formatCurrency } from "@/lib/utils";
 
 export function TourCard({ tour }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-soft">
       <div className="relative h-64 shrink-0 sm:h-72">
-        <Image src={tour.heroImage} alt={tour.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 33vw" />
+        <SafeImage
+          src={tour.heroImage}
+          alt={tour.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 33vw"
+        />
         <div className="absolute left-4 top-4 rounded-full bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-ocean">
           {tour.standard || "Tiêu chuẩn"}
         </div>

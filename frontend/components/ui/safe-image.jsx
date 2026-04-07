@@ -16,5 +16,10 @@ export function SafeImage({ src, fallbackSrc = DEFAULT_FALLBACK_SRC, alt = "", .
     return src;
   }, [fallbackSrc, hasError, src]);
 
-  return <Image {...props} src={resolvedSrc} alt={alt} onError={() => setHasError(true)} />;
+  const mergedStyle = {
+    objectFit: props.fill ? "cover" : undefined,
+    ...props.style
+  };
+
+  return <Image {...props} src={resolvedSrc} alt={alt} onError={() => setHasError(true)} style={mergedStyle} />;
 }

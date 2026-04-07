@@ -18,6 +18,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "secure.gravatar.com"
+      },
+      {
+        protocol: "https",
+        hostname: "letsflytravel.vn"
       }
     ]
   }

@@ -70,7 +70,7 @@ const parseApiResponse = async (response) => {
   return { message: text };
 };
 
-export function BookingForm({ tour, onSummaryChange }) {
+export function BookingForm({ tour, onSummaryChange, compact = false }) {
   const travelerTypes = tour.travelerTypes?.length ? tour.travelerTypes : defaultTravelerTypes;
   const travelerOptions = travelerTypes.filter((type) => ["adult", "child", "infant"].includes(type.key));
   const departureOptions = useMemo(() => getDepartureOptions(tour), [tour]);
@@ -281,8 +281,16 @@ export function BookingForm({ tour, onSummaryChange }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-3 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
+    <form
+      onSubmit={handleSubmit}
+      className={cn("rounded-2xl border border-slate-200 bg-white shadow-sm", compact ? "p-3.5 sm:p-4" : "p-4")}
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3 rounded-xl bg-slate-50",
+          compact ? "mb-2.5 px-3.5 py-2.5" : "mb-3 px-4 py-3"
+        )}
+      >
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400">Booking</p>
           <h2 className="mt-1 text-xl font-semibold leading-none text-ink">Đặt tour</h2>
@@ -296,7 +304,7 @@ export function BookingForm({ tour, onSummaryChange }) {
 
       <StepIndicator step={step} />
 
-      <div className="mt-3 rounded-xl bg-[#f6f4ef] p-3 sm:p-4">
+      <div className={cn("rounded-xl bg-[#f6f4ef]", compact ? "mt-2.5 p-3" : "mt-3 p-3 sm:p-4")}>
         {step === 1 ? (
           <>
             <div className="space-y-4">
