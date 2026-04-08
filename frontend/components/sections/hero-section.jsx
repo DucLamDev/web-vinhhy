@@ -121,7 +121,7 @@ export function HeroSection() {
           <div className="hidden gap-4 sm:grid sm:grid-cols-3">
             {[
               ["3+", "Chương trình nổi bật"],
-              ["Mỗi tuần", "Có lịch khởi hành"],
+              ["Mỗi ngày", "Có lịch khởi hành"],
               ["Nhiều ảnh", "Dễ chọn tour phù hợp"]
             ].map(([value, label]) => (
               <div key={label} className="rounded-[28px] border border-white/60 bg-white/78 p-5 shadow-[0_16px_35px_rgba(21,48,74,0.08)] backdrop-blur">

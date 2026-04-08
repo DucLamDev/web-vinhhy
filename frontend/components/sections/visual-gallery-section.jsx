@@ -1,4 +1,5 @@
-import { visualSections } from "@/lib/mock-data";
+import { SafeImage } from "@/components/ui/safe-image";
+import { homeVisualSections } from "@/lib/home-gallery-data";
 
 export function VisualGallerySection() {
   return (
@@ -13,12 +14,14 @@ export function VisualGallerySection() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {visualSections.map((item, index) => (
+          {homeVisualSections.map((item, index) => (
             <article
               key={item.title}
               className={`overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-soft ${index === 1 ? "md:translate-y-10" : ""}`}
             >
-              <img src={item.image} alt={item.title} className="h-72 w-full object-cover" />
+              <div className="relative h-72 w-full">
+                <SafeImage src={item.image} alt={item.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 25vw" />
+              </div>
               <div className="p-5">
                 <h3 className="text-2xl font-semibold text-ink">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-slate-600">{item.description}</p>

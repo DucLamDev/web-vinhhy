@@ -6,6 +6,18 @@ import { SafeImage } from "@/components/ui/safe-image";
 import { formatCurrency } from "@/lib/utils";
 
 export function FeaturedToursSection({ tours }) {
+  const featuredTours = tours.slice(0, 3).map((tour) => ({
+    ...tour,
+    galleryPreview:
+      (tour.galleryImages || []).slice(0, 3).length > 0
+        ? (tour.galleryImages || []).slice(0, 3)
+        : [
+            { url: tour.heroImage, alt: tour.title },
+            { url: tour.heroImage, alt: tour.title },
+            { url: tour.heroImage, alt: tour.title }
+          ]
+  }));
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -18,7 +30,7 @@ export function FeaturedToursSection({ tours }) {
       </div>
 
       <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:hidden">
-        {tours.slice(0, 3).map((tour) => (
+        {featuredTours.map((tour) => (
           <article
             key={tour.slug}
             className="flex w-[82vw] max-w-[340px] shrink-0 snap-start flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-soft"
@@ -32,6 +44,15 @@ export function FeaturedToursSection({ tours }) {
             <div className="flex flex-1 flex-col p-4">
               <h3 className="line-clamp-2 text-base font-bold leading-snug text-coral">{tour.title}</h3>
               <p className="mt-2 line-clamp-2 text-xs leading-6 text-slate-500">{tour.summary}</p>
+              {tour.galleryPreview.length > 0 ? (
+                <div className="mt-3 flex gap-2">
+                  {tour.galleryPreview.map((image) => (
+                    <div key={image.url} className="relative h-14 flex-1 overflow-hidden rounded-2xl">
+                      <SafeImage src={image.url} alt={image.alt || tour.title} fill className="object-cover" sizes="80px" />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-3 w-3 text-ocean" />
@@ -59,7 +80,7 @@ export function FeaturedToursSection({ tours }) {
       </div>
 
       <div className="mt-10 hidden gap-6 lg:grid lg:grid-cols-3">
-        {tours.slice(0, 3).map((tour) => (
+        {featuredTours.map((tour) => (
           <article
             key={tour.slug}
             className="flex h-full flex-col overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-soft"
@@ -74,6 +95,15 @@ export function FeaturedToursSection({ tours }) {
               <div className="flex-1">
                 <h3 className="line-clamp-2 text-lg font-bold leading-snug tracking-tight text-coral sm:text-xl">{tour.title}</h3>
                 <p className="mt-3 line-clamp-2 text-sm leading-7 text-slate-600">{tour.summary}</p>
+                {tour.galleryPreview.length > 0 ? (
+                  <div className="mt-5 grid grid-cols-3 gap-3">
+                    {tour.galleryPreview.map((image) => (
+                      <div key={image.url} className="relative h-24 overflow-hidden rounded-[20px]">
+                        <SafeImage src={image.url} alt={image.alt || tour.title} fill className="object-cover" sizes="(max-width: 1280px) 120px, 140px" />
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
               <div className="mt-6">
                 <div className="grid gap-3 text-sm text-slate-500 sm:grid-cols-2">

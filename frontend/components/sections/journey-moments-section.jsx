@@ -1,4 +1,5 @@
-import { journeyMoments } from "@/lib/mock-data";
+import { SafeImage } from "@/components/ui/safe-image";
+import { homeJourneyMoments } from "@/lib/home-gallery-data";
 
 export function JourneyMomentsSection() {
   return (
@@ -14,9 +15,11 @@ export function JourneyMomentsSection() {
           </div>
         </div>
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {journeyMoments.map((item) => (
+          {homeJourneyMoments.map((item) => (
             <article key={item.title} className="grid overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-soft md:grid-cols-[0.92fr_1.08fr]">
-              <img src={item.image} alt={item.title} className="h-72 w-full object-cover md:h-full" />
+              <div className="relative h-72 w-full md:h-full">
+                <SafeImage src={item.image} alt={item.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 40vw" />
+              </div>
               <div className="p-6 sm:p-8">
                 <h3 className="text-3xl font-semibold text-ink">{item.title}</h3>
                 <p className="mt-4 text-sm leading-8 text-slate-600">{item.description}</p>

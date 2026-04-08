@@ -51,6 +51,8 @@ export function TourDetailShell({ tour }) {
 
   const activeImage = galleryImages[activeImageIndex] || galleryImages[0] || null;
   const lightboxImage = lightboxIndex === null ? null : galleryImages[lightboxIndex] || null;
+  const previewImages = galleryImages.slice(0, 3);
+  const remainingImageCount = Math.max(galleryImages.length - previewImages.length, 0);
   const sectionRefs = useRef({});
 
   useEffect(() => {
@@ -161,12 +163,17 @@ export function TourDetailShell({ tour }) {
             <div className="reveal-scale visible rounded-[2rem] border border-slate-200/70 bg-white p-3 shadow-sm sm:p-4">
               <div className="grid gap-3 xl:grid-cols-[170px_minmax(0,1fr)]">
                 {galleryImages.length > 1 ? (
-                  <div className="order-2 flex gap-3 overflow-x-auto pb-1 xl:order-1 xl:max-h-[760px] xl:flex-col xl:overflow-y-auto xl:overflow-x-hidden xl:pb-0 xl:pr-1">
-                    {galleryImages.slice(0, 3).map((image, index) => (
+                  <div className="order-2 flex gap-3 overflow-x-auto pb-1 xl:order-1 xl:flex-col xl:overflow-visible xl:pb-0">
+                    {previewImages.map((image, index) => (
                       <button
                         key={`${image.url}-${index}`}
                         type="button"
-                        onClick={() => setActiveImageIndex(index)}
+                        onClick={() => {
+                          setActiveImageIndex(index);
+                          if (index === previewImages.length - 1 && remainingImageCount > 0) {
+                            setLightboxIndex(index);
+                          }
+                        }}
                         className={cn(
                           "relative h-24 w-28 shrink-0 overflow-hidden rounded-[1.4rem] border-2 transition sm:h-28 sm:w-32 xl:h-[142px] xl:w-full",
                           index === activeImageIndex
@@ -183,9 +190,9 @@ export function TourDetailShell({ tour }) {
                           className="object-cover"
                           sizes="180px"
                         />
-                        {index === 4 && galleryImages.length > 5 ? (
+                        {index === previewImages.length - 1 && remainingImageCount > 0 ? (
                           <span className="absolute inset-0 flex items-center justify-center bg-slate-950/45 text-xl font-semibold text-white">
-                            +{galleryImages.length - 5}
+                            +{remainingImageCount}
                           </span>
                         ) : null}
                       </button>
@@ -384,11 +391,12 @@ export function TourDetailShell({ tour }) {
                     index === 0 ? "sm:col-span-2 xl:col-span-2 xl:min-h-[360px]" : ""
                   )}
                 >
-                  <img
+                  <SafeImage
                     src={image.url}
                     alt={image.alt || tour.title}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-slate-900/10 to-transparent opacity-70 transition-opacity group-hover:opacity-85" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">

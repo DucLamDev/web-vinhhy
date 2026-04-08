@@ -134,6 +134,7 @@ const vinhHyOneDayItinerary = [
 
 const VINH_HY_2N2D_SLUG = "tour-vinh-hy-ninh-chu-2-ngay-2-dem";
 const CAU_MUC_DEM_SLUG = "tour-cau-muc-dem-vinh-vinh-hy";
+const DONG_CUU_VINH_HY_VUON_NHO_SLUG = "tour-dong-cuu-vinh-hy-vuon-nho";
 
 const vinhHy2N2DPackageOptions = [
   {
@@ -165,6 +166,56 @@ const cauMucDemPackageOptions = [
     infantPrice: 0,
     note: "Trải nghiệm câu mực nháy cùng ngư dân bản địa."
   }
+];
+
+const dongCuuVinhHyVuonNhoGallery = [
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/tour-dong-cuu-vinh-hy-1536x1536.webp", alt: "Toàn cảnh tour Đồng Cừu - Vĩnh Hy - Vườn Nho" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/dong-cuu-suoi-tien.webp", alt: "Đồng cừu Suối Tiên thơ mộng" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/dong-cuu3.png", alt: "Khung cảnh đồng cừu giữa nắng Ninh Thuận" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/dong-cuu4.png", alt: "Du khách check-in tại đồng cừu" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/dong-cuu5.png", alt: "Khoảnh khắc gần gũi tại đồng cừu" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vinh-vinh-hy.webp", alt: "Mặt nước xanh trong tại Vĩnh Hy" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vinh-vinh-hy-2.jpg", alt: "Góc nhìn rộng ra vịnh Vĩnh Hy" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vinh-hy.png", alt: "Biển xanh và bờ đá ở Vĩnh Hy" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vinh-hy1.png", alt: "Cảnh đẹp Vĩnh Hy trong nắng" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/hang-rai-dong-cuu-vinh-hy-vuon-nho-5.jpg", alt: "Bãi đá Hang Rái" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/hang-rai-vinh-hy-dong-cuu-vuon-nho11-1024x1024.webp", alt: "Check-in Hang Rái" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/hang-rai-vinh-hy-vuon-nho-dong-cuu-2.webp", alt: "Khung cảnh Hang Rái - Vĩnh Hy" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vuon-nho.png", alt: "Lối đi giữa vườn nho Ninh Thuận" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vuon-nho2.png", alt: "Chùm nho chín tại vườn nho" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vuon-nho3.png", alt: "Du khách chụp ảnh ở vườn nho" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/vuon-nho4.png", alt: "Khung hình mùa nho Ninh Thuận" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/ban-an-vinh-hy-2048x1536.webp", alt: "Bữa ăn hải sản tại Vĩnh Hy" },
+  { url: "/tour-dong-cuu-vinh-hy-vuon-nho/binh-hung-dong-cuu-vuon-nho-1-1536x993.webp", alt: "Điểm dừng chân trên hành trình" }
+];
+
+const vinhHy2N2DGallery = [
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2.webp", alt: "Vịnh Vĩnh Hy nhìn từ tàu" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2-1.webp", alt: "Biển Vĩnh Hy trong veo" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-3.webp", alt: "Cảnh quan Vĩnh Hy tuyệt đẹp" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-4.webp", alt: "Góc biển Vĩnh Hy đầy nắng" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy.png", alt: "Khung cảnh biển Vĩnh Hy" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy1.png", alt: "Bãi biển trong xanh ở Vĩnh Hy" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy2.png", alt: "Check-in ven vịnh Vĩnh Hy" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy3.png", alt: "Khoảnh khắc du ngoạn trên vịnh" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy4.png", alt: "Cung đường biển Ninh Thuận" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy5.png", alt: "Biển xanh và triền núi" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/hang-rai-ninh-thuan-2.webp", alt: "Bãi đá san hô cổ Hang Rái" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/ninh-chu-ninh-thuan.webp", alt: "Biển Ninh Chữ xanh mát" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/trung-son-co-tu-ninh-thuan-2-scaled.webp", alt: "Trùng Sơn Cổ Tự" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/mon-ngon-ninh-thuan-2.webp", alt: "Ẩm thực địa phương Ninh Thuận" },
+  { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/an-ngam-san-ho-vinh-hy-ninh-thuan-2.webp", alt: "Trải nghiệm lặn ngắm san hô" }
+];
+
+const cauMucDemGallery = [
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy.webp", alt: "Trải nghiệm câu mực bằng tàu" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-2.webp", alt: "Tàu chuẩn bị ra khơi lúc chiều tà" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-3-e1743394138536.webp", alt: "Du khách tự tay câu mực" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-4.webp", alt: "Khoảnh khắc đón hoàng hôn trên tàu" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-5.webp", alt: "Không khí êm đềm trên vịnh đêm" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-7.webp", alt: "Ánh đèn tàu trên mặt biển" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-9.webp", alt: "Thành quả câu mực trong đêm" },
+  { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-11.webp", alt: "Tàu câu mực đêm ở Vĩnh Hy" }
 ];
 
 export const tourOverrides = {
@@ -265,13 +316,7 @@ export const tourOverrides = {
     pickupPlace: "Ninh Thuận / Nha Trang",
     standard: "Cao cấp",
     heroImage: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-2.webp",
-    galleryImages: [
-      { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vinh-hy-ninh-thuan-3.webp", alt: "Cảnh quan Vịnh Vĩnh Hy tuyệt đẹp" },
-      { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/hang-rai-ninh-thuan-2.webp", alt: "Bãi đá san hô cổ Hang Rái" },
-      { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/ninh-chu-ninh-thuan.webp", alt: "Biển Ninh Chữ xanh mát" },
-      { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/vuon-nho-ninh-thuan-2-1.webp", alt: "Check in Vườn Nho Ninh Thuận" },
-      { url: "/tour-vinh-hy-ninh-chu-2-ngay-2-dem/trung-son-co-tu-ninh-thuan-2-scaled.webp", alt: "Trùng Sơn Cổ Tự" }
-    ],
+    galleryImages: vinhHy2N2DGallery,
     itinerary: [
       {
         time: "Đêm 1",
@@ -349,6 +394,9 @@ export const tourOverrides = {
       metaDescription: "Khám phá Vĩnh Hy và Hang Rái 2 ngày 2 đêm trọn gói, lịch trình linh hoạt, khách sạn trung tâm cao cấp."
     }
   },
+  [DONG_CUU_VINH_HY_VUON_NHO_SLUG]: {
+    galleryImages: dongCuuVinhHyVuonNhoGallery
+  },
   [CAU_MUC_DEM_SLUG]: {
     title: "Tour câu mực đêm Vĩnh Hy",
     slug: CAU_MUC_DEM_SLUG,
@@ -360,14 +408,7 @@ export const tourOverrides = {
     pickupPlace: "Bến Vịnh Vĩnh Hy",
     standard: "Trải nghiệm đặc biệt",
     heroImage: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-4.webp",
-    galleryImages: [
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy.webp", alt: "Trải nghiệm câu mực bằng tàu" },
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-3-e1743394138536.webp", alt: "Du khách tự tay câu mực" },
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-5.webp", alt: "Tận hưởng không khí êm đềm" },
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-11.webp", alt: "Tàu câu mực đêm" },
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-11.webp", alt: "Tàu câu mực đêm" },
-      { url: "/tour-cau-muc-dem-vinh-vinh-hy/tour-cau-muc-dem-vinh-vinh-hy-11.webp", alt: "Tàu câu mực đêm" }
-    ],
+    galleryImages: cauMucDemGallery,
     itinerary: [],
     trustBadges: ["Xác nhận tức thời", "Hỗ trợ 24/7"],
     heroStats: [

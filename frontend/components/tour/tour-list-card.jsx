@@ -29,7 +29,7 @@ export function TourListCard({ tour }) {
               <p className="mt-4 text-sm leading-7 text-slate-600">{tour.summary}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 <span className="rounded-xl border border-coral/40 bg-coral/5 px-3 py-1.5 text-xs font-semibold text-coral">
-                  Mở hằng tuần
+                  Mở hằng ngày
                 </span>
               </div>
             </div>
