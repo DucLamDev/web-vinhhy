@@ -1,29 +1,37 @@
-import Blog from "../models/Blog.js";
+import { asyncHandler } from "../utils/async-handler.js";
+import {
+  getPreviewPostByToken,
+  getPublicPostBySlug,
+  getPublicPosts
+} from "../services/blog.service.js";
+import { getSeoSettings } from "../services/seo-settings.service.js";
 
-export const getBlogs = async (_req, res, next) => {
-  try {
-    const blogs = await Blog.find({ published: true })
-      .select("title slug excerpt featuredImage tags createdAt")
-      .sort({ createdAt: -1 });
+export const getBlogs = asyncHandler(async (_req, res) => {
+  const blogs = await getPublicPosts();
+  res.json(blogs);
+});
 
-    res.json(blogs);
-  } catch (error) {
-    next(error);
+export const getBlogBySlug = asyncHandler(async (req, res) => {
+  const blog = await getPublicPostBySlug(req.params.slug);
+
+  if (!blog) {
+    return res.status(404).json({ message: "Blog not found" });
   }
-};
 
-export const getBlogBySlug = async (req, res, next) => {
-  try {
-    const { slug } = req.params;
-    const blog = await Blog.findOne({ slug, published: true })
-      .populate("author", "name avatar");
+  res.json(blog);
+});
 
-    if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
-    }
+export const getBlogPreviewByToken = asyncHandler(async (req, res) => {
+  const blog = await getPreviewPostByToken(req.params.token);
 
-    res.json(blog);
-  } catch (error) {
-    next(error);
+  if (!blog) {
+    return res.status(404).json({ message: "Preview not found" });
   }
-};
+
+  res.json(blog);
+});
+
+export const getBlogConfig = asyncHandler(async (_req, res) => {
+  const settings = await getSeoSettings();
+  res.json(settings);
+});

@@ -291,16 +291,52 @@ img {
 }
 
 /* ─── Blog prose ─── */
+.prose-blog {
+  color: #3e5872;
+}
+
 .prose-blog p {
   margin-top: 1rem;
   line-height: 1.9;
   color: #3e5872;
 }
 
+.prose-blog>div>*:first-child,
+.prose-blog>*:first-child {
+  margin-top: 0;
+}
+
+.prose-blog h1,
 .prose-blog h2,
 .prose-blog h3,
 .prose-blog h4 {
   margin-top: 2rem;
+  color: #15304a;
+}
+
+.prose-blog h1 {
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.prose-blog h2 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.prose-blog h3 {
+  font-size: 1.35rem;
+  line-height: 1.35;
+}
+
+.prose-blog a {
+  color: #0f8ea4;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 142, 164, 0.28);
+  text-underline-offset: 0.18rem;
+}
+
+.prose-blog strong {
   color: #15304a;
 }
 
@@ -309,6 +345,69 @@ img {
   margin-top: 1rem;
   padding-left: 1.25rem;
   color: #3e5872;
+}
+
+.prose-blog li+li {
+  margin-top: 0.55rem;
+}
+
+.prose-blog blockquote {
+  margin: 1.75rem 0;
+  border-left: 4px solid rgba(15, 142, 164, 0.3);
+  background: linear-gradient(135deg, rgba(15, 142, 164, 0.08), rgba(255, 255, 255, 0.92));
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  color: #15304a;
+}
+
+.prose-blog figure {
+  margin: 1.75rem 0;
+}
+
+.prose-blog figcaption {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+.prose-blog img,
+.prose-blog .wp-content-image {
+  width: 100%;
+  height: auto;
+  border-radius: 1.5rem;
+  object-fit: cover;
+  box-shadow: 0 20px 60px rgba(21, 48, 74, 0.08);
+}
+
+.prose-blog table {
+  width: 100%;
+  margin-top: 1.5rem;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+.prose-blog th,
+.prose-blog td {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  padding: 0.875rem 1rem;
+  text-align: left;
+}
+
+.prose-blog th {
+  background: rgba(241, 245, 249, 0.75);
+  color: #15304a;
+}
+
+.prose-blog iframe {
+  width: 100%;
+  min-height: 240px;
+  margin-top: 1.5rem;
+  border: 0;
+  border-radius: 1.5rem;
 }
 
 /* ─── Hero gallery overlay ─── */

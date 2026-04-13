@@ -7,7 +7,7 @@ const getApiBaseUrl = () => process.env.NEXT_PUBLIC_API_URL || "http://localhost
 
 const normalizeBlog = (blog = {}) => ({
   ...blog,
-  date: blog.date || blog.createdAt || null
+  date: blog.date || blog.publishedAt || blog.createdAt || null
 });
 
 export const getAuthHeaders = (token) =>
@@ -58,21 +58,36 @@ export const getTourBySlug = async (slug) => {
 };
 
 export const getBlogs = async () => {
-  const response = await fetch(`${getApiBaseUrl()}/blogs`, {
-    next: { revalidate: 3600, tags: ["blogs"] }
-  });
+  const response = await fetch(`${getApiBaseUrl()}/blogs`, { cache: "no-store" });
   if (!response.ok) return [];
   const blogs = await response.json();
   return blogs.map(normalizeBlog);
 };
 
 export const getBlogBySlug = async (slug) => {
-  const response = await fetch(`${getApiBaseUrl()}/blogs/${slug}`, {
-    next: { revalidate: 3600, tags: [`blog-${slug}`] }
-  });
+  const response = await fetch(`${getApiBaseUrl()}/blogs/${slug}`, { cache: "no-store" });
 
   if (!response.ok) return null;
 
   const blog = await response.json();
   return normalizeBlog(blog);
+};
+
+export const getBlogPreview = async (token) => {
+  const response = await fetch(`${getApiBaseUrl()}/blogs/preview/${token}`, { cache: "no-store" });
+
+  if (!response.ok) return null;
+
+  const blog = await response.json();
+  return normalizeBlog(blog);
+};
+
+export const getBlogSettings = async () => {
+  const response = await fetch(`${getApiBaseUrl()}/blogs/settings`, {
+    next: { revalidate: 300 }
+  });
+
+  if (!response.ok) return null;
+
+  return response.json();
 };

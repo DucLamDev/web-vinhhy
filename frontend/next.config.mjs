@@ -22,6 +22,26 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "letsflytravel.vn"
+      },
+      {
+        protocol: "https",
+        hostname: "www.letsflytravel.vn"
+      },
+      {
+        protocol: "https",
+        hostname: "i0.wp.com"
+      },
+      {
+        protocol: "https",
+        hostname: "i1.wp.com"
+      },
+      {
+        protocol: "https",
+        hostname: "i2.wp.com"
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com"
       }
     ]
   }
