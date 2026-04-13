@@ -1,3 +1,4 @@
+import { normalizeHtmlForRendering } from "@/lib/blog-content";
 import { cn } from "@/lib/utils";
 
 const widthClasses = {
@@ -25,14 +26,14 @@ const SectionHeading = ({ level = "h2", html = "" }) => {
   return (
     <Tag
       className={cn("text-balance font-semibold tracking-tight text-ink", className)}
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: normalizeHtmlForRendering(html) }}
     />
   );
 };
 
 export function BlogRenderer({ post, className = "" }) {
   const sections = Array.isArray(post?.contentSections) ? post.contentSections : [];
-  const contentHtml = post?.contentHtml || post?.content || "";
+  const contentHtml = normalizeHtmlForRendering(post?.contentHtml || post?.content || "");
 
   if (contentHtml) {
     return (
@@ -92,7 +93,7 @@ export function BlogRenderer({ post, className = "" }) {
           <div key={section.id} className="mx-auto max-w-3xl">
             <div
               className="prose-blog prose-strong:text-ink rounded-[20px] bg-white/70 px-0 py-0 text-[1.02rem]"
-              dangerouslySetInnerHTML={{ __html: section.body || "" }}
+              dangerouslySetInnerHTML={{ __html: normalizeHtmlForRendering(section.body || "") }}
             />
           </div>
         );

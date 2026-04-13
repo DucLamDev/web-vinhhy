@@ -32,7 +32,8 @@ const mapCloudinaryAsset = (asset = {}) => ({
   alt: asset.context?.custom?.alt || "",
   width: asset.width || null,
   height: asset.height || null,
-  format: asset.format || ""
+  format: asset.format || "",
+  folder: asset.folder || ""
 });
 
 const normalizeCloudinaryError = (error) => {
@@ -68,7 +69,7 @@ export const uploadBase64Image = async ({ data, fileName = "", folder = "" }) =>
 
 export const listCloudinaryImages = async ({ search = "", maxResults = 60 } = {}) => {
   const client = ensureConfigured();
-  let query = `folder:${process.env.CLOUDINARY_BLOG_FOLDER || "vinhhy-blog"} AND resource_type:image`;
+  let query = "resource_type:image";
 
   if (search) {
     const normalized = search.replace(/["\\]/g, " ").trim();

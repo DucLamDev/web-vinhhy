@@ -89,8 +89,8 @@ export default async function BlogDetailPage({ params }) {
                 <p className="mt-2 text-sm font-semibold text-ink">{formatDate(post.updatedAt || post.date)}</p>
               </div>
               <div className="rounded-[24px] border border-white/80 bg-white/85 px-5 py-4 shadow-sm backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Canonical</p>
-                <p className="mt-2 text-sm font-semibold text-ink">SEO tu WordPress</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Danh muc</p>
+                <p className="mt-2 text-sm font-semibold text-ink">{primaryCategory?.name || "Cam nang Vinh Hy"}</p>
               </div>
             </div>
           </div>
@@ -120,11 +120,11 @@ export default async function BlogDetailPage({ params }) {
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Thong tin nhanh</p>
             <div className="mt-4 space-y-3 text-sm text-slate-600">
               <div className="flex items-center justify-between gap-4">
-                <span>Published</span>
+                <span>Dang luc</span>
                 <span className="text-right">{formatDate(post.publishedAt || post.date)}</span>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <span>Modified</span>
+                <span>Cap nhat</span>
                 <span className="text-right">{formatDate(post.updatedAt || post.date)}</span>
               </div>
               <div className="flex items-center justify-between gap-4">
@@ -136,7 +136,7 @@ export default async function BlogDetailPage({ params }) {
 
           {post.tags?.length > 0 ? (
             <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-soft">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Tags</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Chu de lien quan</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
                   <Link
@@ -153,9 +153,9 @@ export default async function BlogDetailPage({ params }) {
 
           <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-[linear-gradient(135deg,#15304a_0%,#0f8ea4_100%)] p-6 text-white shadow-soft">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/70">Ke tiep cho chuyen di</p>
-            <h2 className="mt-3 text-2xl font-semibold">Can mot tour Vinh Hy de ghep voi bai viet nay?</h2>
+            <h2 className="mt-3 text-2xl font-semibold">Muon bien bai viet nay thanh mot lich trinh de di ngay?</h2>
             <p className="mt-3 text-sm leading-7 text-white/80">
-              Phan blog duoc lay tu WordPress, con dat tour va booking van chay tren REST API Node.js hien tai.
+              Xem cac tour Vinh Hy dang co san de ghep nhanh voi diem den, thoi gian va ngan sach phu hop cho ban.
             </p>
             <Link
               href="/tour"
@@ -171,7 +171,7 @@ export default async function BlogDetailPage({ params }) {
         <section className="mx-auto mt-14 max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-ocean">Related posts</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-ocean">Doc them</p>
               <h2 className="mt-2 text-3xl font-semibold text-ink">Bai viet cung chu de</h2>
             </div>
             {primaryCategory ? (

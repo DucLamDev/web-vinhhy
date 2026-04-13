@@ -17,6 +17,24 @@ const ENTITY_MAP = {
   "&nbsp;": " "
 };
 
+const GENERIC_TAXONOMY_SLUGS = new Set([
+  "",
+  "uncategorized",
+  "chua-phan-loai",
+  "khong-phan-loai",
+  "default",
+  "general"
+]);
+
+const GENERIC_TAXONOMY_NAMES = new Set([
+  "",
+  "uncategorized",
+  "chua phan loai",
+  "khong phan loai",
+  "mac dinh",
+  "general"
+]);
+
 const decodeHtmlEntities = (value = "") =>
   value
     .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
@@ -140,6 +158,38 @@ const normalizeTerm = (term = {}) => ({
   taxonomy: term.taxonomy || ""
 });
 
+const normalizeComparableLabel = (value = "") =>
+  decodeHtmlEntities(stripHtml(value))
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+const sanitizeDisplayTerms = (terms = [], { keepGeneric = false } = {}) => {
+  const deduped = new Map();
+
+  terms.forEach((term) => {
+    const normalizedTerm = normalizeTerm(term);
+    const normalizedSlug = normalizeComparableLabel(normalizedTerm.slug).replace(/\s+/g, "-");
+    const normalizedName = normalizeComparableLabel(normalizedTerm.name);
+
+    if (!normalizedTerm.name || !normalizedTerm.slug) return;
+    if (
+      !keepGeneric &&
+      (GENERIC_TAXONOMY_SLUGS.has(normalizedSlug) || GENERIC_TAXONOMY_NAMES.has(normalizedName))
+    ) {
+      return;
+    }
+
+    const key = normalizedSlug || normalizedName;
+    if (!key || deduped.has(key)) return;
+
+    deduped.set(key, normalizedTerm);
+  });
+
+  return Array.from(deduped.values());
+};
+
 const extractMetaTag = (html = "", attribute, value) => {
   const attrPattern = `${attribute}=["']${value}["']`;
   const contentAfterAttr = new RegExp(
@@ -240,8 +290,8 @@ const normalizeWordPressPost = (post = {}) => {
   const excerpt = decodeHtmlEntities(stripHtml(post.excerpt?.rendered || post.excerpt || ""));
   const contentHtml = withLazyImages(post.content?.rendered || post.content || "");
   const featuredImage = normalizeImage(post?._embedded?.["wp:featuredmedia"]?.[0], title);
-  const categories = getEmbeddedTerms(post, "category").map(normalizeTerm);
-  const tags = getEmbeddedTerms(post, "post_tag").map(normalizeTerm);
+  const categories = sanitizeDisplayTerms(getEmbeddedTerms(post, "category"));
+  const tags = sanitizeDisplayTerms(getEmbeddedTerms(post, "post_tag"));
   const seo = normalizeSeo(post, title, excerpt, featuredImage);
 
   return {
@@ -283,9 +333,9 @@ const normalizeFallbackPost = (post = {}) => {
     updatedAt: post.date || null,
     link: absoluteUrl(`/blog/${post.slug || ""}`),
     featuredImage,
-    categories: Array.isArray(post.categories) ? post.categories.map(normalizeTerm) : [],
+    categories: Array.isArray(post.categories) ? sanitizeDisplayTerms(post.categories) : [],
     categoryIds: Array.isArray(post.categories) ? post.categories.map((item) => item.id).filter(Boolean) : [],
-    tags: Array.isArray(post.tags) ? post.tags.map(normalizeTerm) : [],
+    tags: Array.isArray(post.tags) ? sanitizeDisplayTerms(post.tags) : [],
     tagIds: Array.isArray(post.tags) ? post.tags.map((item) => item.id).filter(Boolean) : [],
     author: {
       id: 0,
@@ -388,10 +438,10 @@ export async function getBlogCategories() {
       tags: ["wordpress-categories"]
     });
 
-    return data.map(normalizeTerm);
+    return sanitizeDisplayTerms(data);
   } catch (_error) {
     const categories = fallbackBlogPosts.flatMap((post) => post.categories);
-    return Array.from(new Map(categories.map((item) => [item.slug, item])).values());
+    return sanitizeDisplayTerms(categories);
   }
 }
 
@@ -407,10 +457,10 @@ export async function getBlogTags() {
       tags: ["wordpress-tags"]
     });
 
-    return data.map(normalizeTerm);
+    return sanitizeDisplayTerms(data);
   } catch (_error) {
     const tags = fallbackBlogPosts.flatMap((post) => post.tags);
-    return Array.from(new Map(tags.map((item) => [item.slug, item])).values());
+    return sanitizeDisplayTerms(tags);
   }
 }
 

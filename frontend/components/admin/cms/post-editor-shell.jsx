@@ -7,6 +7,7 @@ import { CalendarClock, ExternalLink, Eye, ImagePlus, Save, SearchCheck, Sparkle
 
 import { MediaLibraryModal } from "@/components/admin/cms/media-library-modal";
 import { SeoContentAssistant } from "@/components/admin/cms/seo-content-assistant";
+import { SeoScorePanel } from "@/components/admin/cms/seo-score-panel";
 import { SectionBuilder } from "@/components/admin/cms/section-builder";
 import { BlogRenderer } from "@/components/blog/blog-renderer";
 import { Button } from "@/components/ui/button";
@@ -240,6 +241,8 @@ export function PostEditorShell({ postId }) {
                 setSections([...post.contentSections, ...sections]);
               }}
             />
+
+            <SeoScorePanel post={post} />
 
             <div className="space-y-4 rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex items-center gap-2">

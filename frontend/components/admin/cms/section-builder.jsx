@@ -7,6 +7,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, ImagePlus, Layers3, Trash2 } from "lucide-react";
 
 import { MediaLibraryModal } from "@/components/admin/cms/media-library-modal";
+import { RawHtmlEditor } from "@/components/admin/cms/raw-html-editor";
 import { TiptapHtmlEditor } from "@/components/admin/cms/tiptap-html-editor";
 import { Button } from "@/components/ui/button";
 import { SECTION_TYPES, createSection } from "@/lib/blog-content";
@@ -66,11 +67,19 @@ function SortableSection({ section, onChange, onDelete, onOpenImagePicker }) {
           </div>
         ) : null}
 
-        {section.type === "text" || section.type === "html" ? (
+        {section.type === "text" ? (
           <TiptapHtmlEditor
             value={section.body}
             onChange={(value) => onChange({ ...section, body: value })}
-            placeholder={section.type === "html" ? "Dan custom HTML hoac viet truc tiep..." : "Viet noi dung section..."}
+            placeholder="Viet noi dung section..."
+          />
+        ) : null}
+
+        {section.type === "html" ? (
+          <RawHtmlEditor
+            value={section.body}
+            onChange={(value) => onChange({ ...section, body: value })}
+            placeholder="Dan custom HTML, bang gia, iframe, embed hoac noi dung co dinh dang dac biet..."
           />
         ) : null}
 

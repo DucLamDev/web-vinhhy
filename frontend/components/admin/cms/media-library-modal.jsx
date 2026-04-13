@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
-import { ImagePlus, Search, Trash2, UploadCloud, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ImagePlus, Link2, Search, Trash2, UploadCloud, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useMediaLibrary } from "@/hooks/use-media-library";
 
 export function MediaLibraryModal({ open, onOpenChange, onSelect }) {
   const library = useMediaLibrary(open);
+  const [manualUrl, setManualUrl] = useState("");
 
   useEffect(() => {
     library.setIsOpen(open);
@@ -31,7 +32,7 @@ export function MediaLibraryModal({ open, onOpenChange, onSelect }) {
         <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 px-6 py-4">
           <label className="flex cursor-pointer items-center gap-2 rounded-full bg-ocean px-4 py-2 text-sm font-semibold text-white">
             <UploadCloud className="h-4 w-4" />
-            {library.uploading ? "Đang upload..." : "Upload ảnh"}
+            {library.uploading ? "Dang upload..." : "Upload anh"}
             <input
               type="file"
               accept="image/*"
@@ -55,13 +56,42 @@ export function MediaLibraryModal({ open, onOpenChange, onSelect }) {
                   library.loadMedia(event.currentTarget.value);
                 }
               }}
-              placeholder="Tìm theo tên file"
+              placeholder="Tim theo ten file"
               className="w-full bg-transparent text-sm outline-none"
             />
           </div>
 
           <Button variant="secondary" onClick={() => library.loadMedia()}>
-            Làm mới
+            Lam moi
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 px-6 py-4">
+          <div className="flex min-w-[320px] flex-1 items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
+            <Link2 className="h-4 w-4 text-slate-400" />
+            <input
+              value={manualUrl}
+              onChange={(event) => setManualUrl(event.target.value)}
+              placeholder="Paste URL anh Cloudinary de import tay"
+              className="w-full bg-transparent text-sm outline-none"
+            />
+          </div>
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              if (!manualUrl.trim()) return;
+
+              try {
+                const item = await library.importFromUrl(manualUrl.trim());
+                setManualUrl("");
+                onSelect(item);
+                onOpenChange(false);
+              } catch (error) {
+                library.setError(error.message);
+              }
+            }}
+          >
+            Import URL
           </Button>
         </div>
 
@@ -69,11 +99,11 @@ export function MediaLibraryModal({ open, onOpenChange, onSelect }) {
 
         <div className="grid flex-1 gap-4 overflow-y-auto px-6 py-6 sm:grid-cols-2 xl:grid-cols-4">
           {library.loading ? (
-            <div className="col-span-full text-sm text-slate-500">Đang tải media...</div>
+            <div className="col-span-full text-sm text-slate-500">Dang tai media...</div>
           ) : library.media.length === 0 ? (
             <div className="col-span-full flex min-h-64 flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-slate-50 text-center">
               <ImagePlus className="h-8 w-8 text-slate-400" />
-              <p className="mt-3 text-sm font-medium text-slate-600">Chưa có ảnh nào trong thư viện.</p>
+              <p className="mt-3 text-sm font-medium text-slate-600">Chua co anh nao trong thu vien.</p>
             </div>
           ) : (
             library.media.map((item) => (
@@ -104,7 +134,7 @@ export function MediaLibraryModal({ open, onOpenChange, onSelect }) {
                         onOpenChange(false);
                       }}
                     >
-                      Chọn ảnh
+                      Chon anh
                     </Button>
                     <button
                       type="button"

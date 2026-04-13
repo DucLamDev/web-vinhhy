@@ -1,5 +1,14 @@
 const createId = (prefix = "section") => `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
+const HTML_ENTITY_MAP = {
+  "&lt;": "<",
+  "&gt;": ">",
+  "&amp;": "&",
+  "&quot;": '"',
+  "&#39;": "'",
+  "&nbsp;": " "
+};
+
 export const SECTION_TYPES = [
   { value: "heading", label: "Heading" },
   { value: "text", label: "Text" },
@@ -45,11 +54,29 @@ export const normalizeMediaAsset = (asset) => {
   };
 };
 
+export const decodeStoredHtml = (value = "") =>
+  `${value || ""}`
+    .replace(/&lt;|&gt;|&amp;|&quot;|&#39;|&nbsp;/g, (match) => HTML_ENTITY_MAP[match] || match)
+    .replace(/&amp;(?=(lt;|gt;|quot;|#39;|nbsp;))/g, "&");
+
+export const normalizeHtmlForRendering = (value = "") => {
+  const source = `${value || ""}`.trim();
+  if (!source) return "";
+
+  if (/&lt;(p|div|h[1-6]|table|tbody|tr|td|th|ul|ol|li|figure|img|iframe|blockquote|br|strong|em)\b/i.test(source)) {
+    return decodeStoredHtml(source);
+  }
+
+  return source;
+};
+
+export const normalizeHtmlForEditing = (value = "") => normalizeHtmlForRendering(value);
+
 export const normalizeSection = (section, index = 0) => ({
   id: section?.id || createId(`${section?.type || "section"}-${index}`),
   type: ["heading", "text", "image", "html"].includes(section?.type) ? section.type : "text",
   headingLevel: ["h1", "h2", "h3", "h4"].includes(section?.headingLevel) ? section.headingLevel : "h2",
-  body: section?.body || "",
+  body: section?.type === "html" ? normalizeHtmlForEditing(section?.body || "") : section?.body || "",
   image: normalizeMediaAsset(section?.image),
   caption: section?.caption || "",
   imageDisplay: {
@@ -108,7 +135,7 @@ export const extractPlainText = (post = {}) => {
         return section.caption || section.image?.alt || "";
       }
 
-      return (section.body || "").replace(/<[^>]+>/g, " ");
+      return normalizeHtmlForRendering(section.body || "").replace(/<[^>]+>/g, " ");
     })
     .join(" ")
     .replace(/\s+/g, " ")
